@@ -12,7 +12,7 @@ public class PipelineRun {
     private Date createdDate;
     private Date lastModified;
 
-    
+
     public String getId() {
         return id;
     }

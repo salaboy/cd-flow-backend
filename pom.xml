@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<spring-cloud.version>2020.0.1-SNAPSHOT</spring-cloud.version>
+		<spring-cloud.version>2020.0.0-RC1</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -113,7 +113,7 @@
 		<pluginRepository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>  
+			<url>https://repo.spring.io/milestone</url>
 		</pluginRepository>
 		<pluginRepository>
 			<id>spring-snapshots</id>

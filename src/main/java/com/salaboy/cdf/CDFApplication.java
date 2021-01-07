@@ -1,6 +1,8 @@
 package com.salaboy.cdf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salaboy.cdf.model.Project;
+import com.salaboy.cdf.services.ProjectService;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.jackson.JsonFormat;
@@ -15,10 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.CodecConfigurer;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.WebSocketHandler;
@@ -32,15 +31,13 @@ import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @SpringBootApplication
 @RestController
+@RequestMapping("/api/")
 public class CDFApplication {
 
     public static void main(String[] args) {
@@ -89,27 +86,37 @@ public class CDFApplication {
         return "1.0.0";
     }
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private CloudEventsProcessor cloudEventsProcessor;
+
+
+    @GetMapping("/projects")
+    public List<Project> getProjects(){
+        return projectService.getProjects();
+    }
+
+
+
+
 
     @PostMapping("/events")
     public Mono<CloudEvent> event(@RequestBody Mono<CloudEvent> body) {
         return body.map(
                 event -> {
-                    System.out.println(event);
-                    System.out.println(event.getData());
                     byte[]serialized = EventFormatProvider
                             .getInstance()
                             .resolveFormat(JsonFormat.CONTENT_TYPE)
                             .serialize(event);
-                    //String s = objectMapper.writeValueAsString(cloudEvent);
-                    System.out.println(new String(serialized));
+
+                    cloudEventsProcessor.handleEvent(event);
+
                     handler.getEmitterProcessor("123").onNext(new String(serialized));
                     return event;
                 });
-
-
-
-
     }
 
 

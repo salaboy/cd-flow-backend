@@ -30,7 +30,7 @@ spec:
         - image: gcr.io/camunda-researchanddevelopment/cd-flow:0.0.6
           name: cd-flow-start-pipeline
           resources: {}
-          script:
+          script: |
             #!/usr/bin/env sh
             export CDF_SINK=http://34.91.35.40.xip.io/api/events
             cdf project created --name my-project

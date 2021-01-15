@@ -61,7 +61,19 @@ public class Project {
     }
 
     public void addModule(Module module) {
-        this.lastModified = new Date();
-        this.modules.add(module);
+        Module moduleByName = getModuleByName(module.getName());
+        if (moduleByName == null) {
+            this.lastModified = new Date();
+            this.modules.add(module);
+        }
+    }
+
+    private Module getModuleByName(String moduleName) {
+        for (Module m : modules) {
+            if (m.getName().equals(moduleName)) {
+                return m;
+            }
+        }
+        return null;
     }
 }

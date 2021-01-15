@@ -22,9 +22,13 @@ public class ProjectService {
     }
 
     public void addProject(Project project) {
-        projects.add(project);
+        Project projectByName = getProjectByName(project.getName());
+        if (projectByName == null) {
+            projects.add(project);
+        }
 
     }
+
 
     public Project getProjectByName(String projectName) {
         for (Project p : projects) {

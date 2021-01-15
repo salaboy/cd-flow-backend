@@ -21,8 +21,10 @@ public class ProjectCloudEventHandler implements CloudEventHandler {
     @Override
     public void handle(CloudEvent ce) {
         if(ce.getType().equals("CDF.Project.Created")){
+
             Project project = new Project();
             project.setName(ce.getExtension("cdfprojectname").toString());
+
             projectService.addProject(project);
             return;
         }

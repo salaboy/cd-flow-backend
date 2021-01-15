@@ -98,26 +98,25 @@ public class CDFApplication {
 
 
     @GetMapping("/projects")
-    public List<Project> getProjects(){
+    public List<Project> getProjects() {
         return projectService.getProjects();
     }
-
-
-
 
 
     @PostMapping("/events")
     public Mono<CloudEvent> event(@RequestBody Mono<CloudEvent> body) {
         return body.map(
                 event -> {
-                    byte[]serialized = EventFormatProvider
+                    byte[] serialized = EventFormatProvider
                             .getInstance()
                             .resolveFormat(JsonFormat.CONTENT_TYPE)
                             .serialize(event);
                     eventStoreService.addEventToModule(event);
                     cloudEventsProcessor.handleEvent(event);
-
-                    handler.getEmitterProcessor("123").onNext(new String(serialized));
+                    List<String> sessionsId = handler.getSessionsId();
+                    for (String sid : sessionsId) {
+                        handler.getEmitterProcessor(sid).onNext(new String(serialized));
+                    }
                     return event;
                 });
     }
@@ -173,7 +172,7 @@ class ReactiveWebSocketHandler implements WebSocketHandler {
             String msg = String.format("{\"session\":\"%s\"}", sessionId);
             // Register the outbound flux as the source of outbound messages //.filter(cloudEvent -> cloudEvent.contains(sessionId))
             final Flux<WebSocketMessage> outFlux = Flux.concat(Flux.just(msg), cloudEventsFlux)
-           // final Flux<WebSocketMessage> outFlux = cloudEventsFlux
+                    // final Flux<WebSocketMessage> outFlux = cloudEventsFlux
                     .map(cloudEvent -> {
                         log.info("Sending message to client [{}]: {}", sessionId, cloudEvent);
 

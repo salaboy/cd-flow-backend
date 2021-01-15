@@ -31,7 +31,7 @@ spec:
           name: cd-flow-start-pipeline
           resources: {}
           script:
-            #!/bin/sh
+            #!/usr/bin/env sh
             export CDF_SINK=http://34.91.35.40.xip.io/api/events
             cdf project created --name my-project
             cdf module created --name my-module --project my-project --repo http://github.com/salaboy/my-module

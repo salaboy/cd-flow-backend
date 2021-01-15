@@ -27,16 +27,6 @@ spec:
             name: release-gpg
           workingDir: /workspace/source
         steps:
-        - image: gcr.io/camunda-researchanddevelopment/cd-flow:0.0.6
-          name: cd-flow-start-pipeline
-          resources: {}
-          script: |
-            #!/usr/bin/env sh
-            export CDF_SINK=http://34.91.35.40.xip.io/api/events
-            cdf project created --name my-project
-            cdf module created --name my-module --project my-project --repo http://github.com/salaboy/my-module
-            cdf pipeline started --type module --module my-module --id 1
-
         - image: gcr.io/jenkinsxio/jx-release-version:1.0.42
           name: next-version
           resources: {}
@@ -51,6 +41,16 @@ spec:
           script: |
             #!/usr/bin/env sh
             jx gitops variables
+            cat .jx/variables.sh
+        - image: gcr.io/camunda-researchanddevelopment/cd-flow:0.0.6
+          name: cd-flow-start-pipeline
+          resources: {}
+          script: |
+            #!/usr/bin/env sh
+            export CDF_SINK=http://34.91.35.40.xip.io/api/events
+#            cdf project created --name my-project
+#            cdf module created --name my-module --project my-project --repo http://github.com/salaboy/my-module
+            cdf pipeline started --type module --module my-module --id $VERSION
         - image: maven:3.6-openjdk-11
           name: build-mvn-deploy
           resources: {}

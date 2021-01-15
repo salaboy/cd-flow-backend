@@ -170,10 +170,10 @@ class ReactiveWebSocketHandler implements WebSocketHandler {
             Flux<String> cloudEventsFlux = processors.get(sessionId).map(x -> x);
 
             // Send the session id back to the client
-           // String msg = String.format("{\"session\":\"%s\"}", sessionId);
+            String msg = String.format("{\"session\":\"%s\"}", sessionId);
             // Register the outbound flux as the source of outbound messages //.filter(cloudEvent -> cloudEvent.contains(sessionId))
-           // final Flux<WebSocketMessage> outFlux = Flux.concat(Flux.just(msg), cloudEventsFlux)
-            final Flux<WebSocketMessage> outFlux = cloudEventsFlux
+            final Flux<WebSocketMessage> outFlux = Flux.concat(Flux.just(msg), cloudEventsFlux)
+           // final Flux<WebSocketMessage> outFlux = cloudEventsFlux
                     .map(cloudEvent -> {
                         log.info("Sending message to client [{}]: {}", sessionId, cloudEvent);
 

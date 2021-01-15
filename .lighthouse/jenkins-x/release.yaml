@@ -47,6 +47,7 @@ spec:
           resources: {}
           script: |
             #!/usr/bin/env sh
+            source /workspace/source/.jx/variables.sh
             export CDF_SINK=http://34.91.35.40.xip.io/api/events
             cdf pipeline started --type module --module my-module --id $VERSION
         - image: maven:3.6-openjdk-11

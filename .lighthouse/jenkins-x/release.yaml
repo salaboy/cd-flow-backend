@@ -48,8 +48,6 @@ spec:
           script: |
             #!/usr/bin/env sh
             export CDF_SINK=http://34.91.35.40.xip.io/api/events
-#            cdf project created --name my-project
-#            cdf module created --name my-module --project my-project --repo http://github.com/salaboy/my-module
             cdf pipeline started --type module --module my-module --id $VERSION
         - image: maven:3.6-openjdk-11
           name: build-mvn-deploy

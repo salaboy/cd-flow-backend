@@ -49,11 +49,20 @@ public class Module {
         return pipelineRuns;
     }
 
+    public PipelineRun getPipelineRunById(String pipelineId) {
+        for (PipelineRun pr : pipelineRuns) {
+            if (pr.getId().equals(pipelineId)) {
+                return pr;
+            }
+        }
+        return null;
+    }
+
     public void setPipelineRuns(List<PipelineRun> pipelineRuns) {
         this.pipelineRuns = pipelineRuns;
     }
 
-    public void addPipelineRun(PipelineRun pipelineRun){
+    public void addPipelineRun(PipelineRun pipelineRun) {
         this.lastModified = new Date();
         this.pipelineRuns.add(pipelineRun);
     }

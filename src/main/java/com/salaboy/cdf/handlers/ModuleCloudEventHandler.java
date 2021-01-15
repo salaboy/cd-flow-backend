@@ -30,7 +30,7 @@ public class ModuleCloudEventHandler implements CloudEventHandler {
             String moduleRepo = ce.getExtension("cdfmodulerepo").toString();
             module.setName(moduleName);
             module.setRepoUrl(moduleRepo);
-            String projectName = ce.getExtension("cdfmoduleprojectname").toString();
+            String projectName = ce.getExtension("cdfprojectname").toString();
 
             Project projectByName = projectService.getProjectByName(projectName);
             projectByName.addModule(module);

@@ -11,12 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PipelineCloudEventHandler implements CloudEventHandler {
-//    event.SetExtension("cdfpipeid", pipelineId)
-//            event.SetExtension("cdfpipename", pipelineName)
-//            event.SetExtension("cdfpipetype", pipelineType)
-//            event.SetExtension("cdfpipemodulename", pipelineModuleName)
-//            event.SetExtension("cdfpipeenvname", pipelineEnvName)
-//            event.SetExtension("cdfpipebranch", pipelineBranch)
+
 
     @Autowired
     private ProjectService projectService;
@@ -26,9 +21,10 @@ public class PipelineCloudEventHandler implements CloudEventHandler {
 
     @Override
     public void handle(CloudEvent ce) {
+        String moduleName = ce.getExtension("cdfmodulename").toString();
+        String pipelineId = ce.getExtension("cdfpipeid").toString();
         if(ce.getType().equals("CDF.Pipeline.Started")){
-            String moduleName = ce.getExtension("cdfpipemodulename").toString();
-            String pipelineId = ce.getExtension("cdfpipeid").toString();
+
 
 
             Module module = projectService.getModuleByName( moduleName);
@@ -41,6 +37,11 @@ public class PipelineCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Pipeline.Finished")){
+
+            Module module = projectService.getModuleByName( moduleName);
+
+            PipelineRun pipelineRunById = module.getPipelineRunById(pipelineId);
+            pipelineRunById.setStatus("Finished");
 
             return;
         }

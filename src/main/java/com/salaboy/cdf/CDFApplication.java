@@ -2,6 +2,7 @@ package com.salaboy.cdf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salaboy.cdf.model.Project;
+import com.salaboy.cdf.services.EventStoreService;
 import com.salaboy.cdf.services.ProjectService;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.provider.EventFormatProvider;
@@ -47,6 +48,8 @@ public class CDFApplication {
     @Autowired
     private WebSocketHandler webSocketHandler;
 
+    @Autowired
+    private EventStoreService eventStoreService;
 
 //    @Bean
 //    public GlobalFilter customFilter() {
@@ -111,7 +114,7 @@ public class CDFApplication {
                             .getInstance()
                             .resolveFormat(JsonFormat.CONTENT_TYPE)
                             .serialize(event);
-
+                    eventStoreService.addEventToModule(event);
                     cloudEventsProcessor.handleEvent(event);
 
                     handler.getEmitterProcessor("123").onNext(new String(serialized));

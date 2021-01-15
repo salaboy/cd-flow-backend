@@ -12,10 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArtifactCloudEventHandler implements CloudEventHandler {
 
-//            event.SetExtension("cdfartifactmodule", artifactModuleName)
-//            event.SetExtension("cdfartifactpipeid", artifactPipelineId)
-//            event.SetExtension("cdfartifactid", artifactId)
-
     @Autowired
     private ProjectService projectService;
 
@@ -24,9 +20,9 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
 
     @Override
     public void handle(CloudEvent ce) {
-        String moduleName = ce.getExtension("cdfartifactmodule").toString();
+        String moduleName = ce.getExtension("cdfmodulename").toString();
         String artifactId = ce.getExtension("cdfartifactid").toString();
-        String pipelineId = ce.getExtension("cdfartifactpipeid").toString();
+        String pipelineId = ce.getExtension("cdfpipeid").toString();
         if(ce.getType().equals("CDF.Artifact.Built")){
             PipelineRun pipelineRun = projectService.getPipelineRunFromModule(moduleName, pipelineId);
             ArtifactEvent artifactEvent = new ArtifactEvent();

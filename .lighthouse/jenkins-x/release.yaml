@@ -27,7 +27,7 @@ spec:
             name: release-gpg
           workingDir: /workspace/source
         steps:
-        - image: gcr.io/camunda-researchanddevelopment/cd-flow
+        - image: gcr.io/camunda-researchanddevelopment/cd-flow:0.0.5
           name: cd-flow-start-pipeline
           resources: {}
           script:

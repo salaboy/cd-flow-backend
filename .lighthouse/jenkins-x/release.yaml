@@ -49,7 +49,7 @@ spec:
             #!/usr/bin/env sh
             source /workspace/source/.jx/variables.sh
             export CDF_SINK=http://34.91.35.40.nip.io/api/events
-            cdf pipeline started --type module --module my-module --id $VERSION
+            cdf pipeline started --type module --module cd-flow-backend --id $VERSION
         - image: maven:3.6-openjdk-11
           name: build-mvn-deploy
           resources: {}
@@ -63,7 +63,7 @@ spec:
             #!/usr/bin/env sh
             source /workspace/source/.jx/variables.sh
             export CDF_SINK=http://34.91.35.40.nip.io/api/events
-            cdf artifact built --module my-module --pipelineId $VERSION --id cd-flow-backend
+            cdf artifact built --module cd-flow-backend --pipelineId $VERSION --id cd-flow-backend
         - image: gcr.io/kaniko-project/executor:debug-v1.3.0
           name: build-container-build
           resources: {}
@@ -102,8 +102,8 @@ spec:
             #!/usr/bin/env sh
             source /workspace/source/.jx/variables.sh
             export CDF_SINK=http://34.91.35.40.nip.io/api/events
-            cdf artifact released --module my-module --pipelineId $VERSION --id cd-flow-backend
-            cdf pipeline finished --type module --module my-module --id $VERSION
+            cdf artifact released --module cd-flow-backend --pipelineId $VERSION --id cd-flow-backend
+            cdf pipeline finished --type module --module cd-flow-backend --id $VERSION
 #        - image: gcr.io/jenkinsxio/jx-promote:0.0.164
 #          name: promote-jx-promote
 #          resources: {}

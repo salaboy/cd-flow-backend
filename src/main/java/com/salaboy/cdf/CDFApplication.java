@@ -1,12 +1,13 @@
 package com.salaboy.cdf;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salaboy.cdf.model.Project;
+import com.salaboy.cdf.model.dao.CloudEventRepository;
+import com.salaboy.cdf.model.dao.ModuleRepository;
+import com.salaboy.cdf.model.dao.ProjectRepository;
+import com.salaboy.cdf.model.entities.CloudEventEntity;
+import com.salaboy.cdf.model.entities.Project;
 import com.salaboy.cdf.services.EventStoreService;
 import com.salaboy.cdf.services.ProjectService;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.provider.EventFormatProvider;
-import io.cloudevents.jackson.JsonFormat;
 import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
 import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
 import lombok.extern.slf4j.Slf4j;
@@ -32,18 +33,23 @@ import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @SpringBootApplication
 @RestController
 @RequestMapping("/api/")
+@Slf4j
 public class CDFApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CDFApplication.class, args);
     }
+
 
     @Autowired
     private WebSocketHandler webSocketHandler;
@@ -55,6 +61,15 @@ public class CDFApplication {
 //    public GlobalFilter customFilter() {
 //        return new LoggingFilter();
 //    }
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private ModuleRepository moduleRepository;
+
+
+
 
     @Bean
     public HandlerMapping webSocketHandlerMapping() {
@@ -96,26 +111,32 @@ public class CDFApplication {
     @Autowired
     private CloudEventsProcessor cloudEventsProcessor;
 
+    @Autowired
+    private CloudEventRepository cloudEventRepository;
+
 
     @GetMapping("/projects")
-    public List<Project> getProjects() {
+    public Iterable<Project> getProjects() {
         return projectService.getProjects();
     }
 
+
+    @GetMapping("/cloudevents")
+    public Iterable<CloudEventEntity> getCloudEvents() {
+        return cloudEventRepository.findAll();
+    }
 
     @PostMapping("/events")
     public Mono<CloudEvent> event(@RequestBody Mono<CloudEvent> body) {
         return body.map(
                 event -> {
-                    byte[] serialized = EventFormatProvider
-                            .getInstance()
-                            .resolveFormat(JsonFormat.CONTENT_TYPE)
-                            .serialize(event);
-                    eventStoreService.addEventToModule(event);
+
+                    String cloudEventSerialized = eventStoreService.addEventToModule(event);
                     cloudEventsProcessor.handleEvent(event);
+
                     List<String> sessionsId = handler.getSessionsId();
                     for (String sid : sessionsId) {
-                        handler.getEmitterProcessor(sid).onNext(new String(serialized));
+                        handler.getEmitterProcessor(sid).onNext(cloudEventSerialized);
                     }
                     return event;
                 });

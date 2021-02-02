@@ -1,15 +1,18 @@
 package com.salaboy.cdf.handlers;
 
 import com.salaboy.cdf.CloudEventHandler;
-import com.salaboy.cdf.model.ArtifactEvent;
-import com.salaboy.cdf.model.Module;
-import com.salaboy.cdf.model.PipelineRun;
+import com.salaboy.cdf.model.entities.ArtifactEvent;
+import com.salaboy.cdf.model.entities.PipelineRun;
 import com.salaboy.cdf.services.ProjectService;
 import io.cloudevents.CloudEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
+@Slf4j
 public class ArtifactCloudEventHandler implements CloudEventHandler {
 
     @Autowired
@@ -24,38 +27,71 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         String artifactId = ce.getExtension("cdfartifactid").toString();
         String pipelineId = ce.getExtension("cdfpipeid").toString();
         if(ce.getType().equals("CDF.Artifact.Built")){
-            PipelineRun pipelineRun = projectService.getPipelineRunFromModule(moduleName, pipelineId);
-            ArtifactEvent artifactEvent = new ArtifactEvent();
-            artifactEvent.setId(artifactId);
-            artifactEvent.setType("BUILT");
-            pipelineRun.addArtifactEvent(artifactEvent);
+            Optional<PipelineRun> pipelineRunOptional = projectService.getPipelineRunFromModule(moduleName, pipelineId);
+            if(pipelineRunOptional.isPresent()) {
+                PipelineRun pipelineRun = pipelineRunOptional.get();
+                ArtifactEvent artifactEvent = new ArtifactEvent();
+                artifactEvent.setArtifactId(artifactId);
+                artifactEvent.setType("BUILT");
+                artifactEvent.setPipelineRun(pipelineRun);
+                pipelineRun.addArtifactEvent(artifactEvent);
+                projectService.addOrUpdateArtifactEvent(artifactEvent);
+                projectService.addOrUpdatePipelineRun(pipelineRun);
+            }else{
+                log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
+            }
             return;
         }
 
         if(ce.getType().equals("CDF.Artifact.TestsStarted")){
-            PipelineRun pipelineRun = projectService.getPipelineRunFromModule(moduleName, pipelineId);
-            ArtifactEvent artifactEvent = new ArtifactEvent();
-            artifactEvent.setId(artifactId);
-            artifactEvent.setType("TEST_STARTED");
-            pipelineRun.addArtifactEvent(artifactEvent);
+            Optional<PipelineRun> pipelineRunOptional = projectService.getPipelineRunFromModule(moduleName, pipelineId);
+            if(pipelineRunOptional.isPresent()) {
+                PipelineRun pipelineRun = pipelineRunOptional.get();
+                ArtifactEvent artifactEvent = new ArtifactEvent();
+                artifactEvent.setArtifactId(artifactId);
+                artifactEvent.setPipelineRun(pipelineRun);
+                artifactEvent.setType("TEST_STARTED");
+                pipelineRun.addArtifactEvent(artifactEvent);
+                projectService.addOrUpdateArtifactEvent(artifactEvent);
+                projectService.addOrUpdatePipelineRun(pipelineRun);
+            }else{
+                log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
+            }
             return;
         }
 
         if(ce.getType().equals("CDF.Artifact.TestsEnded")){
-            PipelineRun pipelineRun = projectService.getPipelineRunFromModule(moduleName, pipelineId);
-            ArtifactEvent artifactEvent = new ArtifactEvent();
-            artifactEvent.setId(artifactId);
-            artifactEvent.setType("TEST_ENDED");
-            pipelineRun.addArtifactEvent(artifactEvent);
+            Optional<PipelineRun> pipelineRunOptional = projectService.getPipelineRunFromModule(moduleName, pipelineId);
+            if(pipelineRunOptional.isPresent()) {
+                PipelineRun pipelineRun = pipelineRunOptional.get();
+                ArtifactEvent artifactEvent = new ArtifactEvent();
+                artifactEvent.setArtifactId(artifactId);
+                artifactEvent.setType("TEST_ENDED");
+                artifactEvent.setPipelineRun(pipelineRun);
+                pipelineRun.addArtifactEvent(artifactEvent);
+                projectService.addOrUpdateArtifactEvent(artifactEvent);
+                projectService.addOrUpdatePipelineRun(pipelineRun);
+
+            }else{
+                log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
+            }
             return;
         }
 
         if(ce.getType().equals("CDF.Artifact.Released")){
-            PipelineRun pipelineRun = projectService.getPipelineRunFromModule(moduleName, pipelineId);
-            ArtifactEvent artifactEvent = new ArtifactEvent();
-            artifactEvent.setId(artifactId);
-            artifactEvent.setType("RELEASED");
-            pipelineRun.addArtifactEvent(artifactEvent);
+            Optional<PipelineRun> pipelineRunOptional = projectService.getPipelineRunFromModule(moduleName, pipelineId);
+            if(pipelineRunOptional.isPresent()) {
+                PipelineRun pipelineRun = pipelineRunOptional.get();
+                ArtifactEvent artifactEvent = new ArtifactEvent();
+                artifactEvent.setArtifactId(artifactId);
+                artifactEvent.setType("RELEASED");
+                pipelineRun.addArtifactEvent(artifactEvent);
+                artifactEvent.setPipelineRun(pipelineRun);
+                projectService.addOrUpdateArtifactEvent(artifactEvent);
+                projectService.addOrUpdatePipelineRun(pipelineRun);
+            }else{
+                log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
+            }
             return;
         }
 

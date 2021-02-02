@@ -1,81 +1,95 @@
 package com.salaboy.cdf.services;
 
-import com.salaboy.cdf.model.Module;
-import com.salaboy.cdf.model.PipelineRun;
-import com.salaboy.cdf.model.Project;
+import com.salaboy.cdf.model.dao.ArtifactEventsRepository;
+import com.salaboy.cdf.model.dao.ModuleRepository;
+import com.salaboy.cdf.model.dao.PipelineRunRepository;
+import com.salaboy.cdf.model.dao.ProjectRepository;
+import com.salaboy.cdf.model.entities.ArtifactEvent;
+import com.salaboy.cdf.model.entities.Module;
+import com.salaboy.cdf.model.entities.PipelineRun;
+import com.salaboy.cdf.model.entities.Project;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 
 @Component
 public class ProjectService {
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private ModuleRepository moduleRepository;
+
+    @Autowired
+    private PipelineRunRepository pipelineRunRepository;
+
+    @Autowired
+    private ArtifactEventsRepository artifactEventsRepository;
+
     public ProjectService() {
     }
 
-    private List<Project> projects = new ArrayList<>();
 
-    public List<Project> getProjects() {
-        return projects;
+    public Iterable<Project> getProjects() {
+        return projectRepository.findAll(Sort.by(Sort.Direction.ASC, "lastModifiedDate"));
     }
 
-    public void addProject(Project project) {
-        Project projectByName = getProjectByName(project.getName());
-        if (projectByName == null) {
-            projects.add(project);
-        }
-
+    public void addOrUpdateProject(Project project) {
+        projectRepository.save(project);
     }
 
 
-    public Project getProjectByName(String projectName) {
-        for (Project p : projects) {
-            if (p.getName().equals(projectName)) {
-                return p;
-            }
+    public Optional<Project> getProjectByName(String projectName) {
+        return projectRepository.findByName(projectName);
+    }
+
+    public Optional<Module> getModuleFromProject(String projectName, String moduleName) {
+
+        Optional<Project> projectByName = getProjectByName(projectName);
+        if (projectByName.isPresent()) {
+            return moduleRepository.getModuleFromProject(projectByName.get(), moduleName);
         }
         return null;
     }
 
-    public Module getModuleFromProject(String projectName, String moduleName) {
-        Project projectByName = getProjectByName(projectName);
-        for (Module m : projectByName.getModules()) {
-            if (m.getName().equals(moduleName)) {
-                return m;
-            }
-        }
-        return null;
+    public Optional<PipelineRun> getPipelineRunFromModule(String moduleName, String pipelineId) {
+        return pipelineRunRepository.findByModuleAndId(moduleName, pipelineId);
+
     }
 
-    public PipelineRun getPipelineRunFromModule(String moduleName, String pipelineId) {
-        Module module = null;
-        for (Project p : projects) {
-            for (Module m : p.getModules()) {
-                if (m.getName().equals(moduleName)) {
-                    module = m;
-                }
-            }
-        }
-        if (module != null) {
-            for (PipelineRun p : module.getPipelineRuns()) {
-                if (p.getId().equals(pipelineId)) {
-                    return p;
-                }
-            }
-        }
-        return null;
+
+    public Optional<Module> getModuleByName(String moduleName) {
+        return moduleRepository.findByName(moduleName);
     }
 
-    public Module getModuleByName(String moduleName) {
-        for (Project p : projects) {
-            for (Module m : p.getModules()) {
-                if (m.getName().equals(moduleName)) {
-                    return m;
-                }
-            }
-        }
-        return null;
+    public Optional<PipelineRun> findPipelineRunById(String pipelineId) {
+        return pipelineRunRepository.findByPipelineId(pipelineId);
+    }
+
+    public void addOrUpdatePipelineRun(PipelineRun pipelineRun) {
+        pipelineRunRepository.save(pipelineRun);
+    }
+
+    public void addOrUpdateModule(Module module) {
+        moduleRepository.save(module);
+    }
+
+    public void addOrUpdateArtifactEvent(ArtifactEvent artifactEvent) {
+        artifactEventsRepository.save(artifactEvent);
+    }
+
+
+    public void deleteProject(Project project) {
+        projectRepository.delete(project);
+    }
+
+    public void deleteModuleFromProject(Project project, Module module) {
+        project.getModules().remove(module);
+        projectRepository.save(project);
+        moduleRepository.delete(module);
     }
 }

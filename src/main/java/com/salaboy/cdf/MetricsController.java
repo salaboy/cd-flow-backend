@@ -1,8 +1,7 @@
 package com.salaboy.cdf;
 
-import com.salaboy.cdf.model.Module;
-import com.salaboy.cdf.model.PipelineRun;
-import com.salaboy.cdf.model.Project;
+import com.salaboy.cdf.model.entities.*;
+import com.salaboy.cdf.model.entities.Module;
 import com.salaboy.cdf.model.metrics.ModuleMetrics;
 import com.salaboy.cdf.model.metrics.PipelineMetrics;
 import com.salaboy.cdf.model.metrics.ProjectMetrics;
@@ -12,13 +11,13 @@ import com.salaboy.cdf.services.ProjectService;
 import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/metrics/")
@@ -34,19 +33,19 @@ public class MetricsController {
     public ProjectsMetrics getProjectMetrics() {
         ProjectsMetrics projectsMetrics = new ProjectsMetrics();
 
-        List<Project> projects = projectService.getProjects();
+        Iterable<Project> projects = projectService.getProjects();
         for (Project p : projects) {
             ProjectMetrics projectMetrics = new ProjectMetrics(p.getName());
             for (Module module : p.getModules()) {
                 ModuleMetrics moduleMetrics = new ModuleMetrics(p.getName(), module.getName());
-                List<PipelineRun> pipelineRuns = module.getPipelineRuns();
+                Set<PipelineRun> pipelineRuns = module.getPipelineRuns();
                 List<CloudEvent> eventsForModule = eventStoreService.getEventsForModule(module.getName());
                 for (PipelineRun pr : pipelineRuns) {
-                    PipelineMetrics pipelineMetrics = new PipelineMetrics(pr.getId());
-                    pipelineMetrics.setBuildTime(calculateBuildTime(eventsForModule, pr.getId()));
-                    pipelineMetrics.setTestsTime(calculateTestsTime(eventsForModule, pr.getId()));
-                    pipelineMetrics.setReleaseTime(calculateReleaseTime(eventsForModule, pr.getId()));
-                    pipelineMetrics.setPipelineTime(calculatePipelineTime(eventsForModule, pr.getId()));
+                    PipelineMetrics pipelineMetrics = new PipelineMetrics(pr.getPipelineId());
+                    pipelineMetrics.setBuildTime(calculateBuildTime(eventsForModule, pr.getPipelineId()));
+                    pipelineMetrics.setTestsTime(calculateTestsTime(eventsForModule, pr.getPipelineId()));
+                    pipelineMetrics.setReleaseTime(calculateReleaseTime(eventsForModule, pr.getPipelineId()));
+                    pipelineMetrics.setPipelineTime(calculatePipelineTime(eventsForModule, pr.getPipelineId()));
                     moduleMetrics.addPipeleinMetric(pipelineMetrics);
                 }
                 projectMetrics.addModuleMetrics(moduleMetrics);

@@ -1,13 +1,15 @@
 package com.salaboy.cdf.handlers;
 
 import com.salaboy.cdf.CloudEventHandler;
-import com.salaboy.cdf.model.Module;
-import com.salaboy.cdf.model.PipelineRun;
-import com.salaboy.cdf.model.Project;
+import com.salaboy.cdf.model.entities.Module;
+import com.salaboy.cdf.model.entities.PipelineRun;
+import com.salaboy.cdf.model.entities.Project;
 import com.salaboy.cdf.services.ProjectService;
 import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class PipelineCloudEventHandler implements CloudEventHandler {
@@ -27,23 +29,37 @@ public class PipelineCloudEventHandler implements CloudEventHandler {
 
 
 
-            Module module = projectService.getModuleByName( moduleName);
+            Optional<Module> moduleOptional = projectService.getModuleByName( moduleName);
             PipelineRun pipelineRun = new PipelineRun();
             pipelineRun.setStatus("STARTED");
-            pipelineRun.setId(pipelineId);
+            pipelineRun.setPipelineId(pipelineId);
+            if(moduleOptional.isPresent()) {
+                Module module = moduleOptional.get();
+                module.addPipelineRun(pipelineRun);
+                pipelineRun.setModule(module);
+                projectService.addOrUpdateModule(module);
+            }
 
-            module.addPipelineRun(pipelineRun);
+            projectService.addOrUpdatePipelineRun(pipelineRun);
             return;
         }
 
         if(ce.getType().equals("CDF.Pipeline.Finished")){
 
-            Module module = projectService.getModuleByName( moduleName);
+            Optional<Module> moduleOptional = projectService.getModuleByName( moduleName);
+            if(moduleOptional.isPresent()) {
+                Module module = moduleOptional.get();
+                Optional<PipelineRun> pipelineRunByIdOptional = projectService.findPipelineRunById(pipelineId);
+                if(pipelineRunByIdOptional.isPresent()){
+                    PipelineRun pipelineRun = pipelineRunByIdOptional.get();
+                    pipelineRun.setStatus("Finished");
+                    pipelineRun.setModule(module);
+                    projectService.addOrUpdatePipelineRun(pipelineRun);
+                }
 
-            PipelineRun pipelineRunById = module.getPipelineRunById(pipelineId);
-            pipelineRunById.setStatus("Finished");
 
-            return;
+                return;
+            }
         }
 
     }

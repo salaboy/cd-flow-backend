@@ -39,7 +39,24 @@ spec:
         env:
         - name: VERSION
           value: {{ .Chart.Version }}
-{{- range $pkey, $pval := .Values.env }}
+        - name: SPRING_CLOUD_GCP_SQL_DATABASENAME
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: db-name
+        - name: SPRING_CLOUD_GCP_SQL_INSTANCECONNECTIONNAME
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: db-url
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: db-password
+  {{- range $pkey, $pval := .Values.env }}
         - name: {{ $pkey }}
           value: {{ quote $pval }}
 {{- end }}

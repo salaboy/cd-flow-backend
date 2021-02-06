@@ -1,12 +1,38 @@
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: backend
+#  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /
+#spec:
+#  rules:
+#    - http:
+#        paths:
+#          - path: /
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: cd-flow-backend
+#                port:
+#                  number: 80
+
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: backend 
+  name: backend
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - http:
-      paths:
-      - path: /
-        backend:
-          serviceName: cd-flow-backend 
-          servicePort: 80
+    - host: backend.35.204.61.61.xip.io
+      http:
+        paths:
+          - backend:
+              serviceName: cd-flow-backend
+              servicePort: 80
+    - host: ui.35.204.61.61.xip.io
+      http:
+        paths:
+          - backend:
+              serviceName: cd-flow-ui
+              servicePort: 80

@@ -9,9 +9,8 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: db
-type: kubernetes.io/basic-auth
-stringData:
-  db-name: postgres
+data:
+  db-name: XXX 
   db-url: XXX
   db-password: XXX
 ```

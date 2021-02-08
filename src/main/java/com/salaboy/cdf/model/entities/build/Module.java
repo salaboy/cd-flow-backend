@@ -7,24 +7,31 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@IdClass(ModuleId.class)
 public class Module extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Id
+    private String name;
+
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumns({
+            @JoinColumn(name = "project_id", nullable = false),
+            @JoinColumn(name = "project_name", nullable = false)
+    })
+
     private Project project;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "module")
     @OrderBy("last_modified_date ASC")
     private Set<PipelineRun> pipelineRuns;
 
-    private String name;
+
     private String repoUrl;
     private String latestVersion;
-
 
 
     public Long getId() {

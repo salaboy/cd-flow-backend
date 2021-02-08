@@ -8,16 +8,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@IdClass(PipelineRunId.class)
 public class PipelineRun extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Id
     private String pipelineId;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "module", nullable = false)
+    @JoinColumns({
+            @JoinColumn(name = "module_id", nullable = false),
+            @JoinColumn(name = "module_name", nullable = false)
+    })
+
     private Module module;
 
     private String status;

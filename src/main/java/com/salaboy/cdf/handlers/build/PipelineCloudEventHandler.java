@@ -8,6 +8,7 @@ import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -48,12 +49,11 @@ public class PipelineCloudEventHandler implements CloudEventHandler {
             Optional<Module> moduleOptional = buildTimeService.getModuleByName( moduleName);
             if(moduleOptional.isPresent()) {
                 Module module = moduleOptional.get();
-                Optional<PipelineRun> pipelineRunByIdOptional = buildTimeService.findPipelineRunById(pipelineId);
-                if(pipelineRunByIdOptional.isPresent()){
-                    PipelineRun pipelineRun = pipelineRunByIdOptional.get();
-                    pipelineRun.setStatus("Finished");
-                    pipelineRun.setModule(module);
-                    buildTimeService.addOrUpdatePipelineRun(pipelineRun);
+                List<PipelineRun> pipelineRunByPipelineId = buildTimeService.findPipelineRunById(pipelineId);
+                for(PipelineRun pr: pipelineRunByPipelineId){
+                    pr.setStatus("FINISHED");
+                    pr.setModule(module);
+                    buildTimeService.addOrUpdatePipelineRun(pr);
                 }
 
 

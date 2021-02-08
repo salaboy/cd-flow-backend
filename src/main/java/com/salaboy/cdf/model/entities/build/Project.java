@@ -7,17 +7,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@IdClass(ProjectId.class)
 public class Project extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String moduleId;
+    @Id
+    private String name;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
     @OrderBy("last_modified_date ASC")
     private Set<Module> modules;
-    private String name;
+
 
     public Project() {
     }
@@ -30,14 +32,6 @@ public class Project extends Auditable<String> {
         this.id = id;
     }
 
-
-    public String getModuleId() {
-        return moduleId;
-    }
-
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
-    }
 
     public String getName() {
         return name;

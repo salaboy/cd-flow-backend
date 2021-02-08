@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -66,7 +67,7 @@ public class BuildTimeService {
         return moduleRepository.findByName(moduleName);
     }
 
-    public Optional<PipelineRun> findPipelineRunById(String pipelineId) {
+    public List<PipelineRun> findPipelineRunById(String pipelineId) {
         return pipelineRunRepository.findByPipelineId(pipelineId);
     }
 

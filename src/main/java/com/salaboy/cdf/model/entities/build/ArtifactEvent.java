@@ -18,7 +18,10 @@ public class ArtifactEvent extends Auditable<String> {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="pipelineRun", nullable=false)
+    @JoinColumns({
+            @JoinColumn(name = "pipeline_id", nullable = false),
+            @JoinColumn(name = "pipeline_pipeline_id", nullable = false)
+    })
     private PipelineRun pipelineRun;
 
     public Long getId() {

@@ -2,6 +2,7 @@ package com.salaboy.cdf.model.entities.build;
 
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class PipelineRunId implements Serializable {
     private Long id;
@@ -29,5 +30,19 @@ public class PipelineRunId implements Serializable {
 
     public void setPipelineId(String pipelineId) {
         this.pipelineId = pipelineId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PipelineRunId that = (PipelineRunId) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(pipelineId, that.pipelineId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pipelineId);
     }
 }

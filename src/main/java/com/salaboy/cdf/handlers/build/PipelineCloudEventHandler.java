@@ -27,8 +27,6 @@ public class PipelineCloudEventHandler implements CloudEventHandler {
         String pipelineId = ce.getExtension("cdfpipeid").toString();
         if(ce.getType().equals("CDF.Pipeline.Started")){
 
-
-
             Optional<Module> moduleOptional = buildTimeService.getModuleByName( moduleName);
             PipelineRun pipelineRun = new PipelineRun();
             pipelineRun.setStatus("STARTED");

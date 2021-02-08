@@ -1,6 +1,7 @@
 package com.salaboy.cdf.model.entities.build;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ProjectId implements Serializable {
     private Long id;
@@ -28,5 +29,19 @@ public class ProjectId implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProjectId projectId = (ProjectId) o;
+        return Objects.equals(id, projectId.id) &&
+                Objects.equals(name, projectId.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

@@ -82,7 +82,8 @@ ingress:
 
 serviceAccount:
   enabled: true
-  name: ""
+  name: "dbserviceaccount"
+  # you need to create the previous service account in your kube cluster to get this working
   annotations: {}
 #  annotations:
 #    iam.gke.io/gcp-service-account: my-sa-in-gke

@@ -1,6 +1,7 @@
-package com.salaboy.cdf.model.entities;
+package com.salaboy.cdf.model.entities.build;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salaboy.cdf.model.entities.Auditable;
 
 import javax.persistence.*;
 import java.util.HashSet;

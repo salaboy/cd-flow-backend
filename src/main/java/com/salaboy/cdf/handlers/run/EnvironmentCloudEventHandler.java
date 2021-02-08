@@ -1,8 +1,8 @@
-package com.salaboy.cdf.handlers;
+package com.salaboy.cdf.handlers.run;
 
 import com.salaboy.cdf.CloudEventHandler;
-import com.salaboy.cdf.model.entities.Project;
-import com.salaboy.cdf.services.ProjectService;
+import com.salaboy.cdf.model.entities.build.Project;
+import com.salaboy.cdf.services.BuildTimeService;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,28 +12,28 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-public class ProjectCloudEventHandler implements CloudEventHandler {
+public class EnvironmentCloudEventHandler implements CloudEventHandler {
 
 
     @Autowired
-    private ProjectService projectService;
+    private BuildTimeService projectService;
 
-    public ProjectCloudEventHandler() {
+    public EnvironmentCloudEventHandler() {
     }
 
     @Override
     public void handle(CloudEvent ce) {
         String projectName = "";
-        if (ce.getExtension("cdfprojectname") != null) {
-            projectName = ce.getExtension("cdfprojectname").toString();
+        if (ce.getExtension("cdfenvname") != null) {
+            projectName = ce.getExtension("cdfenvname").toString();
 
-            if (ce.getType().equals("CDF.Project.Created")) {
+            if (ce.getType().equals("CDF.Environment.Created")) {
 
-                Project project = new Project();
+                Environment project = new Project();
                 project.setName(projectName);
 
                 projectService.addOrUpdateProject(project);
-                log.info("Project Created: " + projectName);
+                log.info("Environment Created: " + projectName);
                 return;
             }
 
@@ -46,7 +46,7 @@ public class ProjectCloudEventHandler implements CloudEventHandler {
                 return;
             }
         } else {
-            log.error("Project Name not available in ProjectCloudEventHandler: " + projectName);
+            log.error("Environment Name not available in EnvironmentCloudEventHandler: " + projectName);
         }
         return;
 

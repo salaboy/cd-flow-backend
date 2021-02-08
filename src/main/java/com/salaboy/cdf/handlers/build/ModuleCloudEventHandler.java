@@ -1,10 +1,10 @@
-package com.salaboy.cdf.handlers;
+package com.salaboy.cdf.handlers.build;
 
 import com.salaboy.cdf.CloudEventHandler;
 
-import com.salaboy.cdf.model.entities.Module;
-import com.salaboy.cdf.model.entities.Project;
-import com.salaboy.cdf.services.ProjectService;
+import com.salaboy.cdf.model.entities.build.Module;
+import com.salaboy.cdf.model.entities.build.Project;
+import com.salaboy.cdf.services.BuildTimeService;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class ModuleCloudEventHandler implements CloudEventHandler {
 //            event.SetExtension("cdfmoduleprojectname", moduleProjectName)
 
     @Autowired
-    private ProjectService projectService;
+    private BuildTimeService buildTimeService;
 
     public ModuleCloudEventHandler() {
     }
@@ -37,7 +37,7 @@ public class ModuleCloudEventHandler implements CloudEventHandler {
 
 
 
-            Optional<Project> projectByName = projectService.getProjectByName(projectName);
+            Optional<Project> projectByName = buildTimeService.getProjectByName(projectName);
             if(projectByName.isPresent()) {
                 Module module = new Module();
                 module.setName(moduleName);
@@ -45,8 +45,8 @@ public class ModuleCloudEventHandler implements CloudEventHandler {
                 Project project = projectByName.get();
                 project.addModule(module);
                 module.setProject(project);
-                projectService.addOrUpdateModule(module);
-                projectService.addOrUpdateProject(project);
+                buildTimeService.addOrUpdateModule(module);
+                buildTimeService.addOrUpdateProject(project);
 
             }else{
                log.error("No project by name: " + projectName);
@@ -56,11 +56,11 @@ public class ModuleCloudEventHandler implements CloudEventHandler {
         }
 
         if (ce.getType().equals("CDF.Module.Deleted")) {
-            Optional<Project> projectByName = projectService.getProjectByName(projectName);
+            Optional<Project> projectByName = buildTimeService.getProjectByName(projectName);
             if(projectByName.isPresent()){
-                Optional<Module> moduleByName = projectService.getModuleByName(moduleName);
+                Optional<Module> moduleByName = buildTimeService.getModuleByName(moduleName);
                 if(moduleByName.isPresent()){
-                    projectService.deleteModuleFromProject(projectByName.get(), moduleByName.get());
+                    buildTimeService.deleteModuleFromProject(projectByName.get(), moduleByName.get());
                 }
 
             }

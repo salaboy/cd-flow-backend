@@ -1,13 +1,14 @@
 package com.salaboy.cdf;
 
-import com.salaboy.cdf.model.entities.*;
-import com.salaboy.cdf.model.entities.Module;
+import com.salaboy.cdf.model.entities.build.Module;
+import com.salaboy.cdf.model.entities.build.PipelineRun;
+import com.salaboy.cdf.model.entities.build.Project;
 import com.salaboy.cdf.model.metrics.ModuleMetrics;
 import com.salaboy.cdf.model.metrics.PipelineMetrics;
 import com.salaboy.cdf.model.metrics.ProjectMetrics;
 import com.salaboy.cdf.model.metrics.ProjectsMetrics;
 import com.salaboy.cdf.services.EventStoreService;
-import com.salaboy.cdf.services.ProjectService;
+import com.salaboy.cdf.services.BuildTimeService;
 import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,13 +28,13 @@ public class MetricsController {
     private EventStoreService eventStoreService;
 
     @Autowired
-    private ProjectService projectService;
+    private BuildTimeService buildTimeService;
 
     @GetMapping("")
     public ProjectsMetrics getProjectMetrics() {
         ProjectsMetrics projectsMetrics = new ProjectsMetrics();
 
-        Iterable<Project> projects = projectService.getProjects();
+        Iterable<Project> projects = buildTimeService.getProjects();
         for (Project p : projects) {
             ProjectMetrics projectMetrics = new ProjectMetrics(p.getName());
             for (Module module : p.getModules()) {

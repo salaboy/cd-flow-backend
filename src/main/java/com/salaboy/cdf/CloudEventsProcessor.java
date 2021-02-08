@@ -1,9 +1,9 @@
 package com.salaboy.cdf;
 
-import com.salaboy.cdf.handlers.ArtifactCloudEventHandler;
-import com.salaboy.cdf.handlers.ModuleCloudEventHandler;
-import com.salaboy.cdf.handlers.PipelineCloudEventHandler;
-import com.salaboy.cdf.handlers.ProjectCloudEventHandler;
+import com.salaboy.cdf.handlers.build.ArtifactCloudEventHandler;
+import com.salaboy.cdf.handlers.build.ModuleCloudEventHandler;
+import com.salaboy.cdf.handlers.build.PipelineCloudEventHandler;
+import com.salaboy.cdf.handlers.build.ProjectCloudEventHandler;
 import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

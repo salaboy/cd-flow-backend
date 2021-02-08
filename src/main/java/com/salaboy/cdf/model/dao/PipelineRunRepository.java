@@ -1,10 +1,7 @@
 package com.salaboy.cdf.model.dao;
 
-import com.salaboy.cdf.model.entities.Module;
-import com.salaboy.cdf.model.entities.PipelineRun;
-import com.salaboy.cdf.model.entities.Project;
+import com.salaboy.cdf.model.entities.build.PipelineRun;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Optional;

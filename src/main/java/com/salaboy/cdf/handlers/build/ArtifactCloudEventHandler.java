@@ -1,9 +1,9 @@
-package com.salaboy.cdf.handlers;
+package com.salaboy.cdf.handlers.build;
 
 import com.salaboy.cdf.CloudEventHandler;
-import com.salaboy.cdf.model.entities.ArtifactEvent;
-import com.salaboy.cdf.model.entities.PipelineRun;
-import com.salaboy.cdf.services.ProjectService;
+import com.salaboy.cdf.model.entities.build.ArtifactEvent;
+import com.salaboy.cdf.model.entities.build.PipelineRun;
+import com.salaboy.cdf.services.BuildTimeService;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class ArtifactCloudEventHandler implements CloudEventHandler {
 
     @Autowired
-    private ProjectService projectService;
+    private BuildTimeService buildTimeService;
 
     public ArtifactCloudEventHandler() {
     }
@@ -27,7 +27,7 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         String artifactId = ce.getExtension("cdfartifactid").toString();
         String pipelineId = ce.getExtension("cdfpipeid").toString();
         if(ce.getType().equals("CDF.Artifact.Built")){
-            Optional<PipelineRun> pipelineRunOptional = projectService.getPipelineRunFromModule(moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
@@ -35,8 +35,8 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
                 artifactEvent.setType("BUILT");
                 artifactEvent.setPipelineRun(pipelineRun);
                 pipelineRun.addArtifactEvent(artifactEvent);
-                projectService.addOrUpdateArtifactEvent(artifactEvent);
-                projectService.addOrUpdatePipelineRun(pipelineRun);
+                buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                buildTimeService.addOrUpdatePipelineRun(pipelineRun);
             }else{
                 log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
             }
@@ -44,7 +44,7 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Artifact.TestsStarted")){
-            Optional<PipelineRun> pipelineRunOptional = projectService.getPipelineRunFromModule(moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
@@ -52,8 +52,8 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
                 artifactEvent.setPipelineRun(pipelineRun);
                 artifactEvent.setType("TEST_STARTED");
                 pipelineRun.addArtifactEvent(artifactEvent);
-                projectService.addOrUpdateArtifactEvent(artifactEvent);
-                projectService.addOrUpdatePipelineRun(pipelineRun);
+                buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                buildTimeService.addOrUpdatePipelineRun(pipelineRun);
             }else{
                 log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
             }
@@ -61,7 +61,7 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Artifact.TestsEnded")){
-            Optional<PipelineRun> pipelineRunOptional = projectService.getPipelineRunFromModule(moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
@@ -69,8 +69,8 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
                 artifactEvent.setType("TEST_ENDED");
                 artifactEvent.setPipelineRun(pipelineRun);
                 pipelineRun.addArtifactEvent(artifactEvent);
-                projectService.addOrUpdateArtifactEvent(artifactEvent);
-                projectService.addOrUpdatePipelineRun(pipelineRun);
+                buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                buildTimeService.addOrUpdatePipelineRun(pipelineRun);
 
             }else{
                 log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
@@ -79,7 +79,7 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Artifact.Released")){
-            Optional<PipelineRun> pipelineRunOptional = projectService.getPipelineRunFromModule(moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
@@ -87,8 +87,8 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
                 artifactEvent.setType("RELEASED");
                 pipelineRun.addArtifactEvent(artifactEvent);
                 artifactEvent.setPipelineRun(pipelineRun);
-                projectService.addOrUpdateArtifactEvent(artifactEvent);
-                projectService.addOrUpdatePipelineRun(pipelineRun);
+                buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                buildTimeService.addOrUpdatePipelineRun(pipelineRun);
             }else{
                 log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
             }

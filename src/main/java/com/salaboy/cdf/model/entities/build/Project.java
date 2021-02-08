@@ -1,7 +1,8 @@
-package com.salaboy.cdf.model.entities;
+package com.salaboy.cdf.model.entities.build;
+
+import com.salaboy.cdf.model.entities.Auditable;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 

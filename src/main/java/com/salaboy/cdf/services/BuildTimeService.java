@@ -4,10 +4,10 @@ import com.salaboy.cdf.model.dao.ArtifactEventsRepository;
 import com.salaboy.cdf.model.dao.ModuleRepository;
 import com.salaboy.cdf.model.dao.PipelineRunRepository;
 import com.salaboy.cdf.model.dao.ProjectRepository;
-import com.salaboy.cdf.model.entities.ArtifactEvent;
-import com.salaboy.cdf.model.entities.Module;
-import com.salaboy.cdf.model.entities.PipelineRun;
-import com.salaboy.cdf.model.entities.Project;
+import com.salaboy.cdf.model.entities.build.ArtifactEvent;
+import com.salaboy.cdf.model.entities.build.Module;
+import com.salaboy.cdf.model.entities.build.PipelineRun;
+import com.salaboy.cdf.model.entities.build.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 
 @Component
-public class ProjectService {
+public class BuildTimeService {
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -30,7 +30,7 @@ public class ProjectService {
     @Autowired
     private ArtifactEventsRepository artifactEventsRepository;
 
-    public ProjectService() {
+    public BuildTimeService() {
     }
 
 

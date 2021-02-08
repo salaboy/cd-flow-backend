@@ -15,6 +15,8 @@ public class Environment extends Auditable<String> {
 
     private String name;
 
+    private String tags;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "environment")
     @OrderBy("last_modified_date ASC")
     private Set<Service> services;
@@ -57,8 +59,13 @@ public class Environment extends Auditable<String> {
     }
 
 
+    public String getTags() {
+        return tags;
+    }
 
-
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
 
     public void addService(Service service) {
         if(services == null){

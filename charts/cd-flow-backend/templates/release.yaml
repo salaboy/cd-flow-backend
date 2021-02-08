@@ -1,0 +1,98 @@
+{{- if .Capabilities.APIVersions.Has "jenkins.io/v1/Release" }}
+apiVersion: jenkins.io/v1
+kind: Release
+metadata:
+  creationTimestamp: "2021-02-08T15:30:04Z"
+  deletionTimestamp: null
+  name: '{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}'
+spec:
+  commits:
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: release 0.0.13
+    sha: cbc0eb1806006d1f6d03204a39ed39ca070ea729
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: add variables
+    sha: 3463896473a973904b39aa0e218c220461f6abd1
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      fix compilation issue
+    sha: ca28319e33c89f6f83ecf6cd5b141d7d0a87f7cd
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      touch
+    sha: f363f85778e6a9905be2a58057190094f934128b
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      touch
+    sha: 4161a49aea252229f21d675f8af74e272c9d55c8
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      touch
+    sha: 26d96e041857ac45f3cc6c08033cff4f14696461
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      update jenkins-x (https://github.com/jenkins-x/jx3-pipeline-catalog) from master (1545b53d7772e4205a8723d083ee3238c111e4e5) to master (86515c6268f55ed5741c7760470dbaa6e42eed20)
+    sha: b2d858d6ec13391ff25435b1c96c963a821b4246
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      updating readme and ingress
+    sha: 0a0fad36f05b6d914656e41cf1f81f036ea7c61d
+  gitHttpUrl: https://github.com/salaboy/cd-flow-backend
+  gitOwner: salaboy
+  gitRepository: cd-flow-backend
+  name: '{{ .Chart.Name }}'
+  releaseNotesURL: https://github.com/salaboy/cd-flow-backend/releases/tag/v0.0.14
+  version: v0.0.14
+status: {}
+ 
+{{- end }}

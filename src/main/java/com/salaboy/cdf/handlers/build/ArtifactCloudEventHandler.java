@@ -23,19 +23,20 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
 
     @Override
     public void handle(CloudEvent ce) {
+        String projectName = ce.getExtension("cdfprojectname").toString();
         String moduleName = ce.getExtension("cdfmodulename").toString();
         String artifactId = ce.getExtension("cdfartifactid").toString();
         String pipelineId = ce.getExtension("cdfpipeid").toString();
         if(ce.getType().equals("CDF.Artifact.Built")){
-            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(projectName, moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
                 artifactEvent.setArtifactId(artifactId);
                 artifactEvent.setType("BUILT");
                 artifactEvent.setPipelineRun(pipelineRun);
-                pipelineRun.addArtifactEvent(artifactEvent);
-                buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                ArtifactEvent updatedArtifactEvent = buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                pipelineRun.addArtifactEvent(updatedArtifactEvent);
                 buildTimeService.addOrUpdatePipelineRun(pipelineRun);
             }else{
                 log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
@@ -44,15 +45,16 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Artifact.TestsStarted")){
-            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(projectName, moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
                 artifactEvent.setArtifactId(artifactId);
                 artifactEvent.setPipelineRun(pipelineRun);
                 artifactEvent.setType("TEST_STARTED");
-                pipelineRun.addArtifactEvent(artifactEvent);
-                buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+
+                ArtifactEvent updatedArtifactEvent = buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                pipelineRun.addArtifactEvent(updatedArtifactEvent);
                 buildTimeService.addOrUpdatePipelineRun(pipelineRun);
             }else{
                 log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);
@@ -61,15 +63,15 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Artifact.TestsEnded")){
-            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(projectName, moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
                 artifactEvent.setArtifactId(artifactId);
                 artifactEvent.setType("TEST_ENDED");
                 artifactEvent.setPipelineRun(pipelineRun);
-                pipelineRun.addArtifactEvent(artifactEvent);
-                buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                ArtifactEvent updatedArtifactEvent = buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                pipelineRun.addArtifactEvent(updatedArtifactEvent);
                 buildTimeService.addOrUpdatePipelineRun(pipelineRun);
 
             }else{
@@ -79,15 +81,15 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Artifact.Released")){
-            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(projectName, moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
                 artifactEvent.setArtifactId(artifactId);
                 artifactEvent.setType("RELEASED");
-                pipelineRun.addArtifactEvent(artifactEvent);
                 artifactEvent.setPipelineRun(pipelineRun);
-                buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                ArtifactEvent updatedArtifactEvent = buildTimeService.addOrUpdateArtifactEvent(artifactEvent);
+                pipelineRun.addArtifactEvent(updatedArtifactEvent);
                 buildTimeService.addOrUpdatePipelineRun(pipelineRun);
             }else{
                 log.error("No Pipeline found for module: " + moduleName + " and pipeline id: " + pipelineId);

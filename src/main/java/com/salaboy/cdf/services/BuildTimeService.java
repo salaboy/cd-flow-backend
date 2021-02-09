@@ -39,48 +39,48 @@ public class BuildTimeService {
         return projectRepository.findAll(Sort.by(Sort.Direction.ASC, "lastModifiedDate"));
     }
 
-    public void addOrUpdateProject(Project project) {
-        projectRepository.save(project);
+    public Project addOrUpdateProject(Project project) {
+        return projectRepository.save(project);
     }
 
 
-    public Optional<Project> getProjectByName(String projectName) {
+    public List<Project> getProjectByName(String projectName) {
         return projectRepository.findByName(projectName);
     }
 
     public Optional<Module> getModuleFromProject(String projectName, String moduleName) {
 
-        Optional<Project> projectByName = getProjectByName(projectName);
-        if (projectByName.isPresent()) {
-            return moduleRepository.getModuleFromProject(projectByName.get(), moduleName);
+        List<Project> projectsByName = getProjectByName(projectName);
+        if (!projectsByName.isEmpty()) {
+            return moduleRepository.getModuleFromProject(projectsByName.get(0), moduleName);
         }
         return null;
     }
 
-    public Optional<PipelineRun> getPipelineRunFromModule(String moduleName, String pipelineId) {
-        return pipelineRunRepository.findByModuleAndId(moduleName, pipelineId);
+    public Optional<PipelineRun> getPipelineRunFromModule(String projectName, String moduleName, String pipelineId) {
+        return pipelineRunRepository.findByModuleAndId(projectName, moduleName, pipelineId);
 
     }
 
 
-    public Optional<Module> getModuleByName(String moduleName) {
-        return moduleRepository.findByName(moduleName);
+    public List<Module> getModuleByName(String projectName, String moduleName) {
+        return moduleRepository.findByName(projectName, moduleName);
     }
 
     public List<PipelineRun> findPipelineRunById(String pipelineId) {
         return pipelineRunRepository.findByPipelineId(pipelineId);
     }
 
-    public void addOrUpdatePipelineRun(PipelineRun pipelineRun) {
-        pipelineRunRepository.save(pipelineRun);
+    public PipelineRun addOrUpdatePipelineRun(PipelineRun pipelineRun) {
+        return pipelineRunRepository.save(pipelineRun);
     }
 
-    public void addOrUpdateModule(Module module) {
-        moduleRepository.save(module);
+    public Module addOrUpdateModule(Module module) {
+        return moduleRepository.save(module);
     }
 
-    public void addOrUpdateArtifactEvent(ArtifactEvent artifactEvent) {
-        artifactEventsRepository.save(artifactEvent);
+    public ArtifactEvent addOrUpdateArtifactEvent(ArtifactEvent artifactEvent) {
+        return artifactEventsRepository.save(artifactEvent);
     }
 
 

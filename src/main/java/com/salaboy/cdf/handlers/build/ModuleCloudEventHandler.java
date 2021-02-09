@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -35,32 +36,28 @@ public class ModuleCloudEventHandler implements CloudEventHandler {
 
         if (ce.getType().equals("CDF.Module.Created")) {
 
-
-
-            Optional<Project> projectByName = buildTimeService.getProjectByName(projectName);
-            if(projectByName.isPresent()) {
+            List<Project> projectsByName = buildTimeService.getProjectByName(projectName);
+            if(!projectsByName.isEmpty()) {
                 Module module = new Module();
                 module.setName(moduleName);
                 module.setRepoUrl(moduleRepo);
-                Project project = projectByName.get();
-                project.addModule(module);
+                Project project = projectsByName.get(0);
                 module.setProject(project);
-                buildTimeService.addOrUpdateModule(module);
+                Module savedModule = buildTimeService.addOrUpdateModule(module);
+                project.addModule(savedModule);
                 buildTimeService.addOrUpdateProject(project);
 
-            }else{
-               log.error("No project by name: " + projectName);
             }
 
             return;
         }
 
         if (ce.getType().equals("CDF.Module.Deleted")) {
-            Optional<Project> projectByName = buildTimeService.getProjectByName(projectName);
-            if(projectByName.isPresent()){
-                Optional<Module> moduleByName = buildTimeService.getModuleByName(moduleName);
-                if(moduleByName.isPresent()){
-                    buildTimeService.deleteModuleFromProject(projectByName.get(), moduleByName.get());
+            List<Project> projectsByName = buildTimeService.getProjectByName(projectName);
+            if(!projectsByName.isEmpty()) {
+                List<Module> modulesByName = buildTimeService.getModuleByName(projectName, moduleName);
+                if(!modulesByName.isEmpty()){
+                    buildTimeService.deleteModuleFromProject(projectsByName.get(0), modulesByName.get(0));
                 }
 
             }

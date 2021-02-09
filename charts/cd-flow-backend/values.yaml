@@ -1,7 +1,7 @@
 # Default values for your projects.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-replicaCount: 1
+replicaCount: 2
 image:
   repository: draft
   tag: dev
@@ -82,7 +82,7 @@ ingress:
 
 serviceAccount:
   enabled: true
-  name: "dbserviceaccount"
+  name: ""
   # you need to create the previous service account in your kube cluster to get this working
   annotations: {}
 #  annotations:

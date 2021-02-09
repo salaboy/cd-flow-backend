@@ -2,7 +2,7 @@ package com.salaboy.cdf;
 
 import com.salaboy.cdf.handlers.build.ArtifactCloudEventHandler;
 import com.salaboy.cdf.handlers.build.ModuleCloudEventHandler;
-import com.salaboy.cdf.handlers.build.PipelineCloudEventHandler;
+import com.salaboy.cdf.handlers.build.PipelineRunCloudEventHandler;
 import com.salaboy.cdf.handlers.build.ProjectCloudEventHandler;
 import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class CloudEventsProcessor {
     private ModuleCloudEventHandler moduleCloudEventHandler;
 
     @Autowired
-    private PipelineCloudEventHandler pipelineCloudEventHandler;
+    private PipelineRunCloudEventHandler pipelineRunCloudEventHandler;
 
     @Autowired
     private ArtifactCloudEventHandler artifactCloudEventHandler;
@@ -32,7 +32,7 @@ public class CloudEventsProcessor {
     public void init() {
         handlers.add(projectCloudEventHandler);
         handlers.add(moduleCloudEventHandler);
-        handlers.add(pipelineCloudEventHandler);
+        handlers.add(pipelineRunCloudEventHandler);
         handlers.add(artifactCloudEventHandler);
     }
 

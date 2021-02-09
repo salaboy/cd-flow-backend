@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -38,9 +39,9 @@ public class ProjectCloudEventHandler implements CloudEventHandler {
             }
 
             if (ce.getType().equals("CDF.Project.Deleted")) {
-                Optional<Project> projectByName = buildTimeService.getProjectByName(projectName);
-                if (projectByName.isPresent()) {
-                    buildTimeService.deleteProject(projectByName.get());
+                List<Project> projectsByName = buildTimeService.getProjectByName(projectName);
+                if (!projectsByName.isEmpty()) {
+                    buildTimeService.deleteProject(projectsByName.get(0));
                     log.info("Project Deleted: " + projectName);
                 }
                 return;

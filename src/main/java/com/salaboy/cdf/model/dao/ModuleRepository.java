@@ -11,9 +11,7 @@ import java.util.Optional;
 
 public interface ModuleRepository extends PagingAndSortingRepository<Module, ModuleId> {
 
-    @Query("SELECT m FROM Module m WHERE m.project = ?1 AND m.name = ?2")
-    Optional<Module> getModuleFromProject(Project project, String name);
 
     @Query("SELECT m FROM Module m WHERE m.name = ?2 AND m.project.name = ?1")
-    List<Module> findByName(String projectName, String moduleName);
+    Optional<Module> findByName(String projectName, String moduleName);
 }

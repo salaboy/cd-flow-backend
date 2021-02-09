@@ -28,7 +28,7 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         String artifactId = ce.getExtension("cdfartifactid").toString();
         String pipelineId = ce.getExtension("cdfpipeid").toString();
         if(ce.getType().equals("CDF.Artifact.Built")){
-            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(projectName, moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.findPipelineRunById(projectName, moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
@@ -45,7 +45,7 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Artifact.TestsStarted")){
-            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(projectName, moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.findPipelineRunById(projectName, moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
@@ -63,7 +63,7 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Artifact.TestsEnded")){
-            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(projectName, moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.findPipelineRunById(projectName, moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();
@@ -81,7 +81,7 @@ public class ArtifactCloudEventHandler implements CloudEventHandler {
         }
 
         if(ce.getType().equals("CDF.Artifact.Released")){
-            Optional<PipelineRun> pipelineRunOptional = buildTimeService.getPipelineRunFromModule(projectName, moduleName, pipelineId);
+            Optional<PipelineRun> pipelineRunOptional = buildTimeService.findPipelineRunById(projectName, moduleName, pipelineId);
             if(pipelineRunOptional.isPresent()) {
                 PipelineRun pipelineRun = pipelineRunOptional.get();
                 ArtifactEvent artifactEvent = new ArtifactEvent();

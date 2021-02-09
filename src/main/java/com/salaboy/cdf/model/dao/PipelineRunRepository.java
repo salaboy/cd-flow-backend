@@ -11,8 +11,7 @@ import java.util.Optional;
 public interface PipelineRunRepository extends PagingAndSortingRepository<PipelineRun, PipelineRunId> {
 
     @Query("SELECT pr FROM PipelineRun pr WHERE pr.module.project.name = ?1 AND pr.module.name = ?2 AND pr.pipelineId = ?3")
-    Optional<PipelineRun> findByModuleAndId(String projectName, String moduleName, String id);
+    Optional<PipelineRun> findByPipelineId(String projectName, String moduleName, String id);
 
-    @Query("SELECT pr FROM PipelineRun pr WHERE pr.pipelineId = ?1")
-    List<PipelineRun> findByPipelineId(String pipelineId);
+
 }

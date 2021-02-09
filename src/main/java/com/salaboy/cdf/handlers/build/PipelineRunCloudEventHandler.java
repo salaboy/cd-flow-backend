@@ -8,7 +8,7 @@ import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Optional;
 
 @Component
 public class PipelineRunCloudEventHandler implements CloudEventHandler {
@@ -26,37 +26,28 @@ public class PipelineRunCloudEventHandler implements CloudEventHandler {
         String moduleName = ce.getExtension("cdfmodulename").toString();
         String pipelineId = ce.getExtension("cdfpipeid").toString();
         if(ce.getType().equals("CDF.Pipeline.Started")){
-
-
             PipelineRun pipelineRun = new PipelineRun();
             pipelineRun.setStatus("STARTED");
             pipelineRun.setPipelineId(pipelineId);
-            List<Module> modulesByName = buildTimeService.getModuleByName( projectName, moduleName);
-            if(!modulesByName.isEmpty()) {
-                Module module = modulesByName.get(0);
+            Optional<Module> modulesByName = buildTimeService.getModuleByName( projectName, moduleName);
+            if(!modulesByName.isPresent()) {
+                Module module = modulesByName.get();
                 pipelineRun.setModule(module);
                 PipelineRun savedPipelineRun = buildTimeService.addOrUpdatePipelineRun(pipelineRun);
-
                 module.addPipelineRun(savedPipelineRun);
                 buildTimeService.addOrUpdateModule(module);
             }
-
-
-
-
-
-
             return;
         }
 
         if(ce.getType().equals("CDF.Pipeline.Finished")){
 
-            List<Module> modulesByName = buildTimeService.getModuleByName(projectName,  moduleName);
-            if(!modulesByName.isEmpty()) {
-                Module module = modulesByName.get(0);
-                List<PipelineRun> pipelineRunsByPipelineId = buildTimeService.findPipelineRunById(pipelineId);
-                if(!pipelineRunsByPipelineId.isEmpty()){
-                    PipelineRun pr = pipelineRunsByPipelineId.get(0);
+            Optional<Module> modulesByName = buildTimeService.getModuleByName(projectName,  moduleName);
+            if(!modulesByName.isPresent()) {
+                Module module = modulesByName.get();
+                Optional<PipelineRun> pipelineRunsByPipelineId = buildTimeService.findPipelineRunById(projectName, moduleName, pipelineId);
+                if(pipelineRunsByPipelineId.isPresent()){
+                    PipelineRun pr = pipelineRunsByPipelineId.get();
                     pr.setStatus("FINISHED");
                     pr.setModule(module);
                     buildTimeService.addOrUpdatePipelineRun(pr);

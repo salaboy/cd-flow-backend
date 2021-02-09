@@ -48,27 +48,12 @@ public class BuildTimeService {
         return projectRepository.findByName(projectName);
     }
 
-    public Optional<Module> getModuleFromProject(String projectName, String moduleName) {
-
-        List<Project> projectsByName = getProjectByName(projectName);
-        if (!projectsByName.isEmpty()) {
-            return moduleRepository.getModuleFromProject(projectsByName.get(0), moduleName);
-        }
-        return null;
-    }
-
-    public Optional<PipelineRun> getPipelineRunFromModule(String projectName, String moduleName, String pipelineId) {
-        return pipelineRunRepository.findByModuleAndId(projectName, moduleName, pipelineId);
-
-    }
-
-
-    public List<Module> getModuleByName(String projectName, String moduleName) {
+    public Optional<Module> getModuleByName(String projectName, String moduleName) {
         return moduleRepository.findByName(projectName, moduleName);
     }
 
-    public List<PipelineRun> findPipelineRunById(String pipelineId) {
-        return pipelineRunRepository.findByPipelineId(pipelineId);
+    public Optional<PipelineRun> findPipelineRunById(String projectName, String moduleName, String pipelineId) {
+        return pipelineRunRepository.findByPipelineId(projectName, moduleName, pipelineId);
     }
 
     public PipelineRun addOrUpdatePipelineRun(PipelineRun pipelineRun) {

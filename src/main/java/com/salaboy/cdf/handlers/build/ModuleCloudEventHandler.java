@@ -55,9 +55,9 @@ public class ModuleCloudEventHandler implements CloudEventHandler {
         if (ce.getType().equals("CDF.Module.Deleted")) {
             List<Project> projectsByName = buildTimeService.getProjectByName(projectName);
             if(!projectsByName.isEmpty()) {
-                List<Module> modulesByName = buildTimeService.getModuleByName(projectName, moduleName);
-                if(!modulesByName.isEmpty()){
-                    buildTimeService.deleteModuleFromProject(projectsByName.get(0), modulesByName.get(0));
+                Optional<Module> modulesByName = buildTimeService.getModuleByName(projectName, moduleName);
+                if(!modulesByName.isPresent()){
+                    buildTimeService.deleteModuleFromProject(projectsByName.get(0), modulesByName.get());
                 }
 
             }

@@ -30,7 +30,7 @@ public class PipelineRunCloudEventHandler implements CloudEventHandler {
             pipelineRun.setStatus("STARTED");
             pipelineRun.setPipelineId(pipelineId);
             Optional<Module> modulesByName = buildTimeService.getModuleByName( projectName, moduleName);
-            if(!modulesByName.isPresent()) {
+            if(modulesByName.isPresent()) {
                 Module module = modulesByName.get();
                 pipelineRun.setModule(module);
                 PipelineRun savedPipelineRun = buildTimeService.addOrUpdatePipelineRun(pipelineRun);
@@ -43,7 +43,7 @@ public class PipelineRunCloudEventHandler implements CloudEventHandler {
         if(ce.getType().equals("CDF.Pipeline.Finished")){
 
             Optional<Module> modulesByName = buildTimeService.getModuleByName(projectName,  moduleName);
-            if(!modulesByName.isPresent()) {
+            if(modulesByName.isPresent()) {
                 Module module = modulesByName.get();
                 Optional<PipelineRun> pipelineRunsByPipelineId = buildTimeService.findPipelineRunById(projectName, moduleName, pipelineId);
                 if(pipelineRunsByPipelineId.isPresent()){

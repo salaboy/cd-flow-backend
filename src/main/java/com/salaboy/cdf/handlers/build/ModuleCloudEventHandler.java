@@ -56,7 +56,7 @@ public class ModuleCloudEventHandler implements CloudEventHandler {
             List<Project> projectsByName = buildTimeService.getProjectByName(projectName);
             if(!projectsByName.isEmpty()) {
                 Optional<Module> modulesByName = buildTimeService.getModuleByName(projectName, moduleName);
-                if(!modulesByName.isPresent()){
+                if(modulesByName.isPresent()){
                     buildTimeService.deleteModuleFromProject(projectsByName.get(0), modulesByName.get());
                 }
 

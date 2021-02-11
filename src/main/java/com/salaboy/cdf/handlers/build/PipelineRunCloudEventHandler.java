@@ -25,17 +25,25 @@ public class PipelineRunCloudEventHandler implements CloudEventHandler {
         String projectName = ce.getExtension("cdfprojectname").toString();
         String moduleName = ce.getExtension("cdfmodulename").toString();
         String pipelineId = ce.getExtension("cdfpipeid").toString();
+
         if(ce.getType().equals("CDF.Pipeline.Started")){
-            PipelineRun pipelineRun = new PipelineRun();
-            pipelineRun.setStatus("STARTED");
-            pipelineRun.setPipelineId(pipelineId);
-            Optional<Module> modulesByName = buildTimeService.getModuleByName( projectName, moduleName);
-            if(modulesByName.isPresent()) {
-                Module module = modulesByName.get();
-                pipelineRun.setModule(module);
-                PipelineRun savedPipelineRun = buildTimeService.addOrUpdatePipelineRun(pipelineRun);
-                module.addPipelineRun(savedPipelineRun);
-                buildTimeService.addOrUpdateModule(module);
+            Optional<PipelineRun> pipelineRunById = buildTimeService.findPipelineRunById(projectName, moduleName, pipelineId);
+            if(pipelineRunById.isPresent()){ //dealing with duplicates
+                PipelineRun pipelineRun = pipelineRunById.get();
+                pipelineRun.setStatus("UPDATED");
+                buildTimeService.addOrUpdatePipelineRun(pipelineRun);
+            }else {
+                PipelineRun pipelineRun = new PipelineRun();
+                pipelineRun.setStatus("STARTED");
+                pipelineRun.setPipelineId(pipelineId);
+                Optional<Module> modulesByName = buildTimeService.getModuleByName(projectName, moduleName);
+                if (modulesByName.isPresent()) {
+                    Module module = modulesByName.get();
+                    pipelineRun.setModule(module);
+                    PipelineRun savedPipelineRun = buildTimeService.addOrUpdatePipelineRun(pipelineRun);
+                    module.addPipelineRun(savedPipelineRun);
+                    buildTimeService.addOrUpdateModule(module);
+                }
             }
             return;
         }

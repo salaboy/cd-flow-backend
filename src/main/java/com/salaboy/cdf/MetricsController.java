@@ -38,7 +38,7 @@ public class MetricsController {
         for (Project p : projects) {
             ProjectMetrics projectMetrics = new ProjectMetrics(p.getName());
             for (Module module : p.getModules()) {
-                ModuleMetrics moduleMetrics = new ModuleMetrics(p.getName(), module.getName());
+                ModuleMetrics moduleMetrics = new ModuleMetrics(p.getName(), module.getName(), module.getRepoUrl());
                 Set<PipelineRun> pipelineRuns = module.getPipelineRuns();
                 List<CloudEvent> eventsForModule = eventStoreService.getEventsForModule(module.getName());
                 for (PipelineRun pr : pipelineRuns) {

@@ -7,12 +7,14 @@ public class ModuleMetrics {
 
     private String projectName;
     private String moduleName;
+    private String repoUrl;
 
     private List<PipelineMetrics> pipelineMetrics = new ArrayList<>();
 
-    public ModuleMetrics(String projectName, String moduleName) {
+    public ModuleMetrics(String projectName, String moduleName, String repoUrl) {
         this.projectName = projectName;
         this.moduleName = moduleName;
+        this.repoUrl = repoUrl;
     }
 
     public ModuleMetrics() {
@@ -45,5 +47,13 @@ public class ModuleMetrics {
 
     public void addPipeleinMetric(PipelineMetrics pipelineMetrics) {
         this.pipelineMetrics.add(pipelineMetrics);
+    }
+
+    public String getRepoUrl() {
+        return repoUrl;
+    }
+
+    public void setRepoUrl(String repoUrl) {
+        this.repoUrl = repoUrl;
     }
 }

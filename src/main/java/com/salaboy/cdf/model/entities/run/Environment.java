@@ -2,17 +2,20 @@ package com.salaboy.cdf.model.entities.run;
 
 import com.salaboy.cdf.model.entities.Auditable;
 import com.salaboy.cdf.model.entities.build.Module;
+import com.salaboy.cdf.model.entities.build.ProjectId;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@IdClass(EnvironmentId.class)
 public class Environment extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Id
     private String name;
 
     private String tags;

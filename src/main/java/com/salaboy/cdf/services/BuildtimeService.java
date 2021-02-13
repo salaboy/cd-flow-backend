@@ -17,7 +17,7 @@ import java.util.Optional;
 
 
 @Component
-public class BuildTimeService {
+public class BuildtimeService {
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -31,7 +31,7 @@ public class BuildTimeService {
     @Autowired
     private ArtifactEventsRepository artifactEventsRepository;
 
-    public BuildTimeService() {
+    public BuildtimeService() {
     }
 
 

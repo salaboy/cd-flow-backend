@@ -9,17 +9,24 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@IdClass(ServiceId.class)
 public class Service extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Id
+    private String name;
+
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "env_id", nullable = false)
+    @JoinColumns({
+            @JoinColumn(name = "environment_id", nullable = false),
+            @JoinColumn(name = "environment_name", nullable = false)
+    })
     private Environment environment;
 
-    private String name;
+
     private String repoUrl;
     private String version;
     private String serviceId;

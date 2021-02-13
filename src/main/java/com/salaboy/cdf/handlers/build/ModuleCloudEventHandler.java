@@ -4,7 +4,7 @@ import com.salaboy.cdf.CloudEventHandler;
 
 import com.salaboy.cdf.model.entities.build.Module;
 import com.salaboy.cdf.model.entities.build.Project;
-import com.salaboy.cdf.services.BuildTimeService;
+import com.salaboy.cdf.services.BuildtimeService;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class ModuleCloudEventHandler implements CloudEventHandler {
 //            event.SetExtension("cdfmoduleprojectname", moduleProjectName)
 
     @Autowired
-    private BuildTimeService buildTimeService;
+    private BuildtimeService buildTimeService;
 
     public ModuleCloudEventHandler() {
     }

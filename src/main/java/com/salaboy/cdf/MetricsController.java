@@ -8,7 +8,7 @@ import com.salaboy.cdf.model.metrics.PipelineMetrics;
 import com.salaboy.cdf.model.metrics.ProjectMetrics;
 import com.salaboy.cdf.model.metrics.ProjectsMetrics;
 import com.salaboy.cdf.services.EventStoreService;
-import com.salaboy.cdf.services.BuildTimeService;
+import com.salaboy.cdf.services.BuildtimeService;
 import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +28,7 @@ public class MetricsController {
     private EventStoreService eventStoreService;
 
     @Autowired
-    private BuildTimeService buildTimeService;
+    private BuildtimeService buildTimeService;
 
     @GetMapping("")
     public ProjectsMetrics getProjectMetrics() {

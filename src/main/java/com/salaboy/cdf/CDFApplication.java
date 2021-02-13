@@ -1,12 +1,8 @@
 package com.salaboy.cdf;
 
 import com.salaboy.cdf.model.dao.CloudEventRepository;
-import com.salaboy.cdf.model.dao.ModuleRepository;
-import com.salaboy.cdf.model.dao.ProjectRepository;
 import com.salaboy.cdf.model.entities.CloudEventEntity;
-import com.salaboy.cdf.model.entities.build.Project;
 import com.salaboy.cdf.services.EventStoreService;
-import com.salaboy.cdf.services.BuildTimeService;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.spring.webflux.CloudEventHttpMessageReader;
 import io.cloudevents.spring.webflux.CloudEventHttpMessageWriter;
@@ -62,12 +58,6 @@ public class CDFApplication {
 //        return new LoggingFilter();
 //    }
 
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private ModuleRepository moduleRepository;
-
 
 
 
@@ -105,8 +95,7 @@ public class CDFApplication {
     }
 
 
-    @Autowired
-    private BuildTimeService buildTimeService;
+
 
     @Autowired
     private CloudEventsProcessor cloudEventsProcessor;
@@ -115,10 +104,6 @@ public class CDFApplication {
     private CloudEventRepository cloudEventRepository;
 
 
-    @GetMapping("/projects")
-    public Iterable<Project> getProjects() {
-        return buildTimeService.getProjects();
-    }
 
 
     @GetMapping("/cloudevents")

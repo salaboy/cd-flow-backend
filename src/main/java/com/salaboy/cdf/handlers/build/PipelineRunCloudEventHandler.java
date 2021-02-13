@@ -3,7 +3,7 @@ package com.salaboy.cdf.handlers.build;
 import com.salaboy.cdf.CloudEventHandler;
 import com.salaboy.cdf.model.entities.build.Module;
 import com.salaboy.cdf.model.entities.build.PipelineRun;
-import com.salaboy.cdf.services.BuildTimeService;
+import com.salaboy.cdf.services.BuildtimeService;
 import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ public class PipelineRunCloudEventHandler implements CloudEventHandler {
 
 
     @Autowired
-    private BuildTimeService buildTimeService;
+    private BuildtimeService buildTimeService;
 
     public PipelineRunCloudEventHandler() {
     }

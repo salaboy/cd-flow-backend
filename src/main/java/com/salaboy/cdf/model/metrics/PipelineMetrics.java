@@ -7,6 +7,8 @@ public class PipelineMetrics {
     private String releaseTime;
     private String testsTime;
     private String pipelineTime;
+    private String pipelineStatus;
+
 
     public PipelineMetrics() {
     }
@@ -53,5 +55,13 @@ public class PipelineMetrics {
 
     public void setPipelineTime(String pipelineTime) {
         this.pipelineTime = pipelineTime;
+    }
+
+    public String getPipelineStatus() {
+        return pipelineStatus;
+    }
+
+    public void setPipelineStatus(String pipelineStatus) {
+        this.pipelineStatus = pipelineStatus;
     }
 }

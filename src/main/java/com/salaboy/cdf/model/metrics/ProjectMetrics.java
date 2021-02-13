@@ -7,6 +7,7 @@ public class ProjectMetrics {
     private String projectName;
     private List<ModuleMetrics> moduleMetrics = new ArrayList<>();
 
+
     public ProjectMetrics() {
     }
 

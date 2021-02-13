@@ -43,11 +43,30 @@ public class MetricsController {
                 List<CloudEvent> eventsForModule = eventStoreService.getEventsForModule(module.getName());
                 for (PipelineRun pr : pipelineRuns) {
                     PipelineMetrics pipelineMetrics = new PipelineMetrics(pr.getPipelineId());
-                    pipelineMetrics.setBuildTime(calculateBuildTime(eventsForModule, pr.getPipelineId()));
-                    pipelineMetrics.setTestsTime(calculateTestsTime(eventsForModule, pr.getPipelineId()));
-                    pipelineMetrics.setReleaseTime(calculateReleaseTime(eventsForModule, pr.getPipelineId()));
-                    pipelineMetrics.setPipelineTime(calculatePipelineTime(eventsForModule, pr.getPipelineId()));
-                    moduleMetrics.addPipeleinMetric(pipelineMetrics);
+                    String buildTime = calculateBuildTime(eventsForModule, pr.getPipelineId());
+                    pipelineMetrics.setBuildTime(buildTime);
+                    String testTime = calculateTestsTime(eventsForModule, pr.getPipelineId());
+                    pipelineMetrics.setTestsTime(testTime);
+                    String releaseTime = calculateReleaseTime(eventsForModule, pr.getPipelineId());
+                    pipelineMetrics.setReleaseTime(releaseTime);
+                    String pipelineTime = calculatePipelineTime(eventsForModule, pr.getPipelineId());
+                    pipelineMetrics.setPipelineTime(pipelineTime);
+                    if(pipelineTime == "N/A"){
+                        pipelineMetrics.setPipelineStatus("STARTED");
+                    }else{
+                        pipelineMetrics.setPipelineStatus("FINISHED");
+                    }
+                    if(buildTime != "N/A"){
+                        moduleMetrics.setModuleStatus("BUILT");
+                    }
+                    if(testTime != "N/A"){
+                        moduleMetrics.setModuleStatus("TESTED");
+                    }
+                    if(releaseTime != "N/A"){
+                        moduleMetrics.setModuleStatus("RELEASED");
+                    }
+
+                    moduleMetrics.addPipelineMetric(pipelineMetrics);
                 }
                 projectMetrics.addModuleMetrics(moduleMetrics);
             }

@@ -36,7 +36,7 @@ public class BuildTimeService {
 
 
     public Iterable<Project> getProjects() {
-        return projectRepository.findAll(Sort.by(Sort.Direction.ASC, "lastModifiedDate"));
+        return projectRepository.findAll(Sort.by(Sort.Direction.DESC, "lastModifiedDate"));
     }
 
     public Project addOrUpdateProject(Project project) {

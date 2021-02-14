@@ -29,7 +29,7 @@ public class PipelineRun extends Auditable<String> {
     private String status;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "pipelineRun")
-    @OrderBy("last_modified_date ASC")
+    @OrderBy("last_modified_date DESC")
     private Set<ArtifactEvent> artifactEvents;
 
 

@@ -5,6 +5,7 @@ import com.salaboy.cdf.model.dao.ServiceRepository;
 import com.salaboy.cdf.model.entities.run.Environment;
 import com.salaboy.cdf.model.entities.run.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -44,5 +45,9 @@ public class RuntimeService {
         environment.getServices().remove(service);
         environmentRepository.save(environment);
         serviceRepository.delete(service);
+    }
+
+    public Iterable<Environment> getEnvironments() {
+        return environmentRepository.findAll(Sort.by(Sort.Direction.DESC, "lastModifiedDate"));
     }
 }

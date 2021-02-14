@@ -17,7 +17,7 @@ public class Project extends Auditable<String> {
     private String name;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
-    @OrderBy("last_modified_date ASC")
+    @OrderBy("last_modified_date DESC")
     private Set<Module> modules;
 
 

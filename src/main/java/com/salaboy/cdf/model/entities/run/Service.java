@@ -2,11 +2,8 @@ package com.salaboy.cdf.model.entities.run;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salaboy.cdf.model.entities.Auditable;
-import com.salaboy.cdf.model.entities.build.PipelineRun;
-import com.salaboy.cdf.model.entities.build.Project;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @IdClass(ServiceId.class)

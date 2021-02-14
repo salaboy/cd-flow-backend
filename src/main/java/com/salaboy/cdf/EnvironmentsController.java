@@ -1,7 +1,9 @@
 package com.salaboy.cdf;
 
 import com.salaboy.cdf.model.entities.build.Project;
+import com.salaboy.cdf.model.entities.run.Environment;
 import com.salaboy.cdf.services.BuildtimeService;
+import com.salaboy.cdf.services.RuntimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class EnvironmentsController {
 
     @Autowired
-    private BuildtimeService buildTimeService;
+    private RuntimeService runtimeService;
 
     @GetMapping("")
-    public Iterable<Project> getProjects() {
-        return buildTimeService.getProjects();
+    public Iterable<Environment> getEnvironments() {
+        return runtimeService.getEnvironments();
     }
 
 }

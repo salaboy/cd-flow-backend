@@ -21,7 +21,7 @@ public class Environment extends Auditable<String> {
     private String tags;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "environment")
-    @OrderBy("last_modified_date ASC")
+    @OrderBy("last_modified_date DESC")
     private Set<Service> services;
     private String repoURL;
 

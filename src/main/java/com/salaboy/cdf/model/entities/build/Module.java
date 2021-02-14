@@ -26,7 +26,7 @@ public class Module extends Auditable<String> {
     private Project project;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "module")
-    @OrderBy("last_modified_date ASC")
+    @OrderBy("last_modified_date DESC")
     private Set<PipelineRun> pipelineRuns;
 
 

@@ -31,7 +31,7 @@ public class ServiceCloudEventHandler implements CloudEventHandler {
         if (ce.getExtension("cdfenvname") != null) {
             environmentName = ce.getExtension("cdfenvname").toString();
             String serviceName = ce.getExtension("cdfservicename").toString();
-
+            String serviceVersion = ce.getExtension("cdfserviceversion").toString();
             if (ce.getType().equals("CDF.Service.Created")) {
 
                 List<Environment> envsByName = runtimeService.getEnvironmentByName(environmentName);
@@ -39,7 +39,7 @@ public class ServiceCloudEventHandler implements CloudEventHandler {
 
                     Service service = new Service();
                     service.setName(serviceName);
-
+                    service.setVersion(serviceVersion);
                     Environment environment = envsByName.get(0);
                     service.setEnvironment(environment);
                     Service savedService = runtimeService.addOrUpdateService(service);

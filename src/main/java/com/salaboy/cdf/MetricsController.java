@@ -43,6 +43,7 @@ public class MetricsController {
             for(Service service : e.getServices()){
                 ServiceMetrics sm = new ServiceMetrics();
                 sm.setServiceName(service.getName());
+                environmentMetrics.addServiceMetrics(sm);
             }
             environmentsMetrics.addEnvironmentMetrics(environmentMetrics);
         }

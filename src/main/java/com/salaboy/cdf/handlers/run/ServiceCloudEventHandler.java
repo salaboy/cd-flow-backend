@@ -71,7 +71,7 @@ public class ServiceCloudEventHandler implements CloudEventHandler {
                 return;
             }
         } else {
-            log.error("Environment Name not available in EnvironmentCloudEventHandler: " + environmentName);
+            log.error("Service Name not available in ServiceCloudEventHandler: " + environmentName);
         }
         return;
 
@@ -79,7 +79,7 @@ public class ServiceCloudEventHandler implements CloudEventHandler {
 
     @Override
     public boolean matches(CloudEvent ce) {
-        if (ce.getType().equals("CDF.Environment.Created") || ce.getType().equals("CDF.Environment.Deleted")) {
+        if (ce.getType().equals("CDF.Service.Created") || ce.getType().equals("CDF.Service.Deleted") || ce.getType().equals("CDF.Service.Updated")) {
             return true;
         }
         return false;

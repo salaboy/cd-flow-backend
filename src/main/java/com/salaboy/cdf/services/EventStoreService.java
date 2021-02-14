@@ -11,9 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 @Slf4j
@@ -23,26 +20,36 @@ public class EventStoreService {
     @Autowired
     private CloudEventRepository cloudEventRepository;
 
-    public String addEventToModule(CloudEvent cloudEvent) {
+    public String addEventToStore(CloudEvent cloudEvent) {
         byte[] serialized = EventFormatProvider
                 .getInstance()
                 .resolveFormat(JsonFormat.CONTENT_TYPE)
                 .serialize(cloudEvent);
 
-        if (cloudEvent.getType().equals("CDF.Project.Created")) { // ignore for now
-            return serialized.toString();
+        CloudEventEntity cloudEventEntity = new CloudEventEntity();
+        if(cloudEvent.getExtension("cdfprojectname") != null) {
+            String projectName = cloudEvent.getExtension("cdfprojectname").toString();
+            cloudEventEntity.setProjectName(projectName);
+            if( cloudEvent.getExtension("cdfmodulename") != null){
+                String moduleName = cloudEvent.getExtension("cdfmodulename").toString();
+                cloudEventEntity.setModuleName(moduleName);
+            }
+
+        }else if(cloudEvent.getExtension("cdfenvname") != null){
+            String envName = cloudEvent.getExtension("cdfenvname").toString();
+            cloudEventEntity.setEnvironmentName(envName);
+            if(cloudEvent.getExtension("cdfservicename") != null) {
+                String serviceName = cloudEvent.getExtension("cdfservicename").toString();
+                cloudEventEntity.setServiceName(serviceName);
+            }
         }
-
-        String moduleName = cloudEvent.getExtension("cdfmodulename").toString();
-
 
         String cloudEventSerialized = new String(serialized);
         log.info("Serialized Cloud Event: " + cloudEventSerialized);
 
-        CloudEventEntity cloudEventEntity = new CloudEventEntity();
         cloudEventEntity.setCloudEvent(cloudEventSerialized);
-        cloudEventEntity.setModuleName(moduleName);
         cloudEventEntity.setType(cloudEvent.getType());
+
         cloudEventRepository.save(cloudEventEntity);
 
         return serialized.toString();
@@ -52,6 +59,17 @@ public class EventStoreService {
         List<CloudEvent> ces = new ArrayList<>();
         Iterable<CloudEventEntity> byModuleName = cloudEventRepository.findByModuleName(moduleName);
         for (CloudEventEntity cee : byModuleName) {
+            ces.add(EventFormatProvider
+                    .getInstance()
+                    .resolveFormat(JsonFormat.CONTENT_TYPE).deserialize(cee.getCloudEvent().getBytes()));
+        }
+        return ces;
+    }
+
+    public List<CloudEvent> getEventsForService(String serviceName) {
+        List<CloudEvent> ces = new ArrayList<>();
+        Iterable<CloudEventEntity> byServiceName = cloudEventRepository.findByServiceName(serviceName);
+        for (CloudEventEntity cee : byServiceName) {
             ces.add(EventFormatProvider
                     .getInstance()
                     .resolveFormat(JsonFormat.CONTENT_TYPE).deserialize(cee.getCloudEvent().getBytes()));

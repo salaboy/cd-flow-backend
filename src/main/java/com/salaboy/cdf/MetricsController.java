@@ -3,12 +3,12 @@ package com.salaboy.cdf;
 import com.salaboy.cdf.model.entities.build.Module;
 import com.salaboy.cdf.model.entities.build.PipelineRun;
 import com.salaboy.cdf.model.entities.build.Project;
-import com.salaboy.cdf.model.metrics.ModuleMetrics;
-import com.salaboy.cdf.model.metrics.PipelineMetrics;
-import com.salaboy.cdf.model.metrics.ProjectMetrics;
-import com.salaboy.cdf.model.metrics.ProjectsMetrics;
+import com.salaboy.cdf.model.entities.run.Environment;
+import com.salaboy.cdf.model.entities.run.Service;
+import com.salaboy.cdf.model.metrics.*;
 import com.salaboy.cdf.services.EventStoreService;
 import com.salaboy.cdf.services.BuildtimeService;
+import com.salaboy.cdf.services.RuntimeService;
 import io.cloudevents.CloudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +30,29 @@ public class MetricsController {
     @Autowired
     private BuildtimeService buildTimeService;
 
-    @GetMapping("")
+    @Autowired
+    private RuntimeService runtimeService;
+
+    @GetMapping("environments")
+    public EnvironmentsMetrics getEnvironmentMetrics() {
+        EnvironmentsMetrics environmentsMetrics = new EnvironmentsMetrics();
+        Iterable<Environment> environments = runtimeService.getEnvironments();
+        for(Environment e : environments){
+            EnvironmentMetrics environmentMetrics = new EnvironmentMetrics();
+            environmentMetrics.setEnvironmentName(e.getName());
+            for(Service service : e.getServices()){
+                ServiceMetrics sm = new ServiceMetrics();
+                sm.setServiceName(service.getName());
+            }
+            environmentsMetrics.addEnvironmentMetrics(environmentMetrics);
+        }
+
+        return environmentsMetrics;
+
+    }
+
+
+    @GetMapping("projects")
     public ProjectsMetrics getProjectMetrics() {
         ProjectsMetrics projectsMetrics = new ProjectsMetrics();
 
@@ -51,18 +73,18 @@ public class MetricsController {
                     pipelineMetrics.setReleaseTime(releaseTime);
                     String pipelineTime = calculatePipelineTime(eventsForModule, pr.getPipelineId());
                     pipelineMetrics.setPipelineTime(pipelineTime);
-                    if(pipelineTime == "N/A"){
+                    if (pipelineTime == "N/A") {
                         pipelineMetrics.setPipelineStatus("STARTED");
-                    }else{
+                    } else {
                         pipelineMetrics.setPipelineStatus("FINISHED");
                     }
-                    if(buildTime != "N/A"){
+                    if (buildTime != "N/A") {
                         moduleMetrics.setModuleStatus("BUILT");
                     }
-                    if(testTime != "N/A"){
+                    if (testTime != "N/A") {
                         moduleMetrics.setModuleStatus("TESTED");
                     }
-                    if(releaseTime != "N/A"){
+                    if (releaseTime != "N/A") {
                         moduleMetrics.setModuleStatus("RELEASED");
                     }
 

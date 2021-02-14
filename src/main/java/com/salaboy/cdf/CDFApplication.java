@@ -116,7 +116,7 @@ public class CDFApplication {
         return body.map(
                 event -> {
 
-                    String cloudEventSerialized = eventStoreService.addEventToModule(event);
+                    String cloudEventSerialized = eventStoreService.addEventToStore(event);
                     cloudEventsProcessor.handleEvent(event);
 
                     List<String> sessionsId = handler.getSessionsId();

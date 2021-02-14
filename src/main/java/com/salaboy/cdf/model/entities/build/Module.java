@@ -22,7 +22,6 @@ public class Module extends Auditable<String> {
             @JoinColumn(name = "project_id", nullable = false),
             @JoinColumn(name = "project_name", nullable = false)
     })
-
     private Project project;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "module")

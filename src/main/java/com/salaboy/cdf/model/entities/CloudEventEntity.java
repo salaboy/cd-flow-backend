@@ -1,7 +1,6 @@
 package com.salaboy.cdf.model.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 public class CloudEventEntity extends Auditable<String> {
@@ -13,6 +12,11 @@ public class CloudEventEntity extends Auditable<String> {
     @Column(columnDefinition = "TEXT")
     private String cloudEvent;
 
+    private String environmentName;
+
+    private String serviceName;
+
+    private String projectName;
 
     private String moduleName;
 
@@ -53,5 +57,29 @@ public class CloudEventEntity extends Auditable<String> {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getEnvironmentName() {
+        return environmentName;
+    }
+
+    public void setEnvironmentName(String environmentName) {
+        this.environmentName = environmentName;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

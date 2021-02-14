@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.salaboy</groupId>
     <artifactId>cd-flow-backend</artifactId>
-    <version>0.0.28</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>CD - Flow Backend</name>
     <description>CD Flow Backend Services</description>
 

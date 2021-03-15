@@ -24,7 +24,9 @@ public class PrometheusServiceMetrics {
     @Autowired
     private RuntimeService runtimeService;
 
-    private Map<String, List<String>> runtimeData = new ConcurrentHashMap<>();
+    private Map<String, List<String>> serviceStatusGauges = new ConcurrentHashMap<>();
+    private Map<String, List<String>> envStatusGauges = new ConcurrentHashMap<>();
+    private Map<String, List<String>> envServicesGauges = new ConcurrentHashMap<>();
 
 
     public PrometheusServiceMetrics(MeterRegistry meterRegistry) {
@@ -32,7 +34,15 @@ public class PrometheusServiceMetrics {
     }
 
     public List<String> createServiceStatusGauge(String serviceName, String serviceVersion) {
-        return meterRegistry.gauge(serviceName + "_Gauge", Tags.of("version", serviceVersion), new ArrayList<>(), List::size);
+        return meterRegistry.gauge(serviceName + "_Service_Gauge", Tags.of("version", serviceVersion), new ArrayList<>(), List::size);
+    }
+
+    public List<String> createEnvStatusGauge(String envName) {
+        return meterRegistry.gauge(envName + "_Env_Gauge", Tags.empty(), new ArrayList<>(), List::size);
+    }
+
+    public List<String> createEnvServicesGauge(String envName) {
+        return meterRegistry.gauge(envName + "_Env_Services_Gauge", Tags.empty(), new ArrayList<>(), List::size);
     }
 
     // Gather data about the Environment for prometheus.. this should be something like:
@@ -48,18 +58,31 @@ public class PrometheusServiceMetrics {
         System.out.println("Envionments: ");
         for (Environment env : environments) {
             System.out.println("\t Environment: " + env.getName());
+            if(envStatusGauges.get(env.getName()) == null){
+                List<String> envStatusGauge = createEnvStatusGauge(env.getName());
+                envStatusGauge.add(env.getName());
+                envStatusGauges.put(env.getName(), envStatusGauge);
+            }
+
+            if(envServicesGauges.get(env.getName()) == null){
+                List<String> envServicesGauge = createEnvServicesGauge(env.getName());
+                envServicesGauge.add(env.getName());
+                envServicesGauges.put(env.getName(), envServicesGauge);
+            }
+            List<String> envServicesList = envServicesGauges.get(env.getName());
             System.out.println("\t\t Services: ");
             Set<Service> services = env.getServices();
             for (Service service : services) {
                 System.out.println("\t\t\t Service: " + service.getName() + " Version:" + service.getVersion());
-                if(runtimeData.get(service.getName() + "-" + service.getVersion()) == null) {
-                    System.out.println("Gaauge for: " + service.getName() + "-" + service.getVersion() + " didn't existed");
+                envServicesList.add(service.getName());
+                if(serviceStatusGauges.get(service.getName() + "-" + service.getVersion()) == null) {
+                    System.out.println("Gauge for: " + service.getName() + "-" + service.getVersion() + " didn't existed");
                     List<String> serviceStatusGauge = createServiceStatusGauge(service.getName(), service.getVersion());
                     serviceStatusGauge.add(service.getName());
-                    runtimeData.put(service.getName() + "-" + service.getVersion(), serviceStatusGauge);
+                    serviceStatusGauges.put(service.getName() + "-" + service.getVersion(), serviceStatusGauge);
                 }else{
-                    System.out.println("Gaauge for: " + service.getName() + "-" + service.getVersion() +
-                            " existed already, with size: " + runtimeData.get(service.getName() + "-" + service.getVersion()).size());
+                    System.out.println("Gauge for: " + service.getName() + "-" + service.getVersion() +
+                            " existed already, with size: " + serviceStatusGauges.get(service.getName() + "-" + service.getVersion()).size());
 
                 }
             }

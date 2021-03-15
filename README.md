@@ -14,5 +14,4 @@ data:
   db-url: XXX
   db-password: XXX
 ```
-
-touch 
+** NOTICE TO ADD the correct service account for the cloud sql proxy to work in the deployment **

@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @EnableScheduling
@@ -21,6 +23,8 @@ public class PrometheusServiceMetrics {
 
     @Autowired
     private RuntimeService runtimeService;
+
+    private Map<String, List<String>> runtimeData = new ConcurrentHashMap<>();
 
 
     public PrometheusServiceMetrics(MeterRegistry meterRegistry) {
@@ -44,12 +48,20 @@ public class PrometheusServiceMetrics {
         System.out.println("Envionments: ");
         for (Environment env : environments) {
             System.out.println("\t Environment: " + env.getName());
-            System.out.println("\t Services: ");
+            System.out.println("\t\t Services: ");
             Set<Service> services = env.getServices();
             for (Service service : services) {
-                System.out.println("\t\t Service: " + service.getName() + " Version:" + service.getVersion());
-                List<String> serviceStatusGauge = createServiceStatusGauge(service.getName(), service.getVersion());
-                serviceStatusGauge.add(service.getName());
+                System.out.println("\t\t\t Service: " + service.getName() + " Version:" + service.getVersion());
+                if(runtimeData.get(service.getName() + "-" + service.getVersion()) != null) {
+                    System.out.println("Gaauge for: " + service.getName() + "-" + service.getVersion() + " didn't existed");
+                    List<String> serviceStatusGauge = createServiceStatusGauge(service.getName(), service.getVersion());
+                    serviceStatusGauge.add(service.getName());
+                    runtimeData.put(service.getName() + "-" + service.getVersion(), serviceStatusGauge);
+                }else{
+                    System.out.println("Gaauge for: " + service.getName() + "-" + service.getVersion() +
+                            " existed already, with size: " + runtimeData.get(service.getName() + "-" + service.getVersion()).size());
+
+                }
             }
         }
 

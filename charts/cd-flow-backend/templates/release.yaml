@@ -1,0 +1,48 @@
+{{- if .Capabilities.APIVersions.Has "jenkins.io/v1/Release" }}
+apiVersion: jenkins.io/v1
+kind: Release
+metadata:
+  creationTimestamp: "2021-03-15T15:10:07Z"
+  deletionTimestamp: null
+  name: '{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}'
+spec:
+  commits:
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: release 0.0.29
+    sha: de903891723327c0e100f7966f317c7d34e611ed
+  - author:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    branch: master
+    committer:
+      email: jenkins-x@googlegroups.com
+      name: jenkins-x-bot
+    message: |
+      chore: add variables
+    sha: 87b00bd4574fb4ed7142aefa38efbb630d18c721
+  - author:
+      email: salaboy@gmail.com
+      name: salaboy
+    branch: master
+    committer:
+      email: salaboy@gmail.com
+      name: salaboy
+    message: |
+      adding prometheus metrics
+    sha: 19a2bfc4bd2bdb172cd18e1f2a702588cecd9bc1
+  gitHttpUrl: https://github.com/salaboy/cd-flow-backend
+  gitOwner: salaboy
+  gitRepository: cd-flow-backend
+  name: '{{ .Chart.Name }}'
+  releaseNotesURL: https://github.com/salaboy/cd-flow-backend/releases/tag/v0.0.30
+  version: v0.0.30
+status: {}
+ 
+{{- end }}

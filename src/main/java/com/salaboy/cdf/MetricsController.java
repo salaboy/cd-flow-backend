@@ -43,6 +43,9 @@ public class MetricsController {
             for(Service service : e.getServices()){
                 ServiceMetrics sm = new ServiceMetrics();
                 sm.setServiceName(service.getName());
+                sm.setVersion(service.getVersion());
+                List<CloudEvent> eventsForService = eventStoreService.getEventsForService(service.getName());
+                String serviceUpTime = calculateServiceUpTime(eventsForService, service.getVersion());
                 environmentMetrics.addServiceMetrics(sm);
             }
             environmentsMetrics.addEnvironmentMetrics(environmentMetrics);
@@ -50,6 +53,37 @@ public class MetricsController {
 
         return environmentsMetrics;
 
+    }
+
+    private String calculateServiceUpTime(List<CloudEvent> eventsForService, String version) {
+        String serviceUpTime = "N/A";
+
+//        if (eventsForService != null) {
+//            OffsetDateTime deployedTime = null;
+//            OffsetDateTime nowTime = null;
+//            for (CloudEvent ce : eventsForService) {
+//                if (ce.getType().equals("CDF.Service.Created")) {
+//
+//                    String cdfserviceversion = ce.getExtension("cdfserviceversion").toString();
+//                    if()
+//
+//                }
+//                if (ce.getType().equals("CDF.Artifact.Built")) {
+//                    String cdfpipeid = ce.getExtension("cdfpipeid").toString();
+//                    if (pipelineId.equals(cdfpipeid)) {
+//                        buildTime = ce.getTime();
+//                    }
+//                }
+//            }
+//            if (startTime != null && buildTime != null) {
+//                Duration duration = Duration.between(startTime, buildTime);
+//
+//                return duration.toHoursPart() + "hh : " + duration.toMinutesPart() + "mm : " + duration.toSecondsPart() + "ss.";
+//            }
+//        }
+
+
+        return serviceUpTime;
     }
 
 

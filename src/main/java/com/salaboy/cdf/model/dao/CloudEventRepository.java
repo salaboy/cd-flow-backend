@@ -12,6 +12,8 @@ public interface CloudEventRepository extends PagingAndSortingRepository<CloudEv
     Iterable<CloudEventEntity> findByEnvironmentName(String environmentName);
 
     Iterable<CloudEventEntity> findByServiceName(String serviceName);
+
+    Iterable<CloudEventEntity> findByServiceNameAndServiceVersion(String serviceName, String serviceVersion);
 }
 
 

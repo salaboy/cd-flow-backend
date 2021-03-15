@@ -16,6 +16,8 @@ public class CloudEventEntity extends Auditable<String> {
 
     private String serviceName;
 
+    private String serviceVersion;
+
     private String projectName;
 
     private String moduleName;
@@ -81,5 +83,13 @@ public class CloudEventEntity extends Auditable<String> {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public String getServiceVersion() {
+        return serviceVersion;
+    }
+
+    public void setServiceVersion(String serviceVersion) {
+        this.serviceVersion = serviceVersion;
     }
 }

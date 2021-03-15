@@ -52,7 +52,7 @@ public class PrometheusServiceMetrics {
             Set<Service> services = env.getServices();
             for (Service service : services) {
                 System.out.println("\t\t\t Service: " + service.getName() + " Version:" + service.getVersion());
-                if(runtimeData.get(service.getName() + "-" + service.getVersion()) != null) {
+                if(runtimeData.get(service.getName() + "-" + service.getVersion()) == null) {
                     System.out.println("Gaauge for: " + service.getName() + "-" + service.getVersion() + " didn't existed");
                     List<String> serviceStatusGauge = createServiceStatusGauge(service.getName(), service.getVersion());
                     serviceStatusGauge.add(service.getName());
